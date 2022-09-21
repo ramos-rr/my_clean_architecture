@@ -6,6 +6,9 @@ __pycache__/
 # IDEA
 .idea
 
+# SQLITE DATABASE
+storage.db
+
 # C extensions
 *.so
 
