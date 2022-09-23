@@ -1,2 +1,1 @@
-from src.infra.entities import *
-from src.infra.config import *
+from src.infra.repo import UserRepository
