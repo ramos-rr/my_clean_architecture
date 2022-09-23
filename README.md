@@ -94,3 +94,4 @@ class DbConnectionHandler:
 <img src="images/user_repository_diagram.png" alt="user_repository_diagram" width="400" height=""><br>
 - Now it is time to set up a USER REPOSITORY and a PET REPOSITORY CLASS that will call both entities and
 database as desired:
+
