@@ -6,6 +6,9 @@ name = "pypi"
 [packages]
 pre-commit = "*"
 sqlalchemy = "*"
+pytest = "*"
+faker = "*"
+pytest-cov = "*"
 
 [dev-packages]
 

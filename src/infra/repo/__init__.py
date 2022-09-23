@@ -1,2 +1,2 @@
 from .fake import FakerRepository
-from .fake import DbConnectionHandler
+from .user_repository import UserRepository
