@@ -1,9 +1,9 @@
-# my_clean_architecture
+ s# my_clean_architecture
 Repository based on the Clean Architecture book from Robert C Martin and YouTube classes from "programador Lhama"
 
 ## Check YouTube channel ["Programador Lhama"](https://www.youtube.com/watch?v=YAMgtR3aCuY&list=PLAgbpJQADBGJmTxeRZKWvdJAoJj8_x3si&index=1)
 
-### Relation between classes<br>
+## Relation between classes<br>
 <img src="images/relacao_usuario_pets.png" alt="relationship_classes" width="480" height=""><br>
 - A User takes care of some Pets<br>
 ### Diagram of a spcific classe<br>
@@ -43,4 +43,54 @@ such as Column, String, Integer<br>
 `# COMMAND THE CREATION OF THE FILE SQLITE DB`<br>
 `>>> Base.metadata.create_all(engine)`<br>
 <br>
+
 - SEE: `storage.db` must have been created in your project's root
+
+### TIP to create and manage DB FROM SQLALCHEMY:<br>
+1. When stablishing a connection, you have to set up a ENGINE:<br>
+2. Define a SESSION, which is NONE initially, but recieves a value after started<br>
+3. Define _ _ enter _ _() and _ _ exit _ _() methods to set up a session every time the class 
+is called, ado close in the end
+<br>
+
+```
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+
+class DbConnectionHandler:
+
+    def __init__(self):
+        self.__connection_string = "sqlite:///storage.db"  # This string is need by sqlalchemy
+        self.session = None
+
+    def get_engine(self):
+        """
+        Create a connection to DB
+        :return: connection engine
+        """
+        engine = create_engine(self.__connection_string)
+        return engine
+
+    # Define a method to enter DB to garantee some levels of security
+    def __enter__(self):
+        engine = create_engine(self.__connection_string)
+        session_maker = sessionmaker()
+        self.session = session_maker(bind=engine)
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.session.close()
+```
+<br>
+
+5. Finally, when introducing new data in DB, call `session` and one of this four commands:
+- <connection_name>.session.add( <new_data> )<br>
+- <connection_name>.session.commit()<br>
+- <connection_name>.session.rollback()<br>
+- <connection_name>.session.close()<br>
+- OBS: generally, this features are used with <b>try / finally</b> resource<br>
+<br>
+## CREATING A USERREPOSITORY AND PETREPOSITORY CLASS<br>
+<img src="images/user_repository_diagram.png" alt="user_repository_diagram" width="400" height=""><br>
+- Now it is time to set up a USER REPOSITORY and a PET REPOSITORY CLASS that will call both entities and
+database as desired:
