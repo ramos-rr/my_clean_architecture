@@ -93,5 +93,9 @@ class DbConnectionHandler:
 ## CREATING A USERREPOSITORY AND PETREPOSITORY CLASS<br>
 <img src="images/user_repository_diagram.png" alt="user_repository_diagram" width="400" height=""><br>
 - Now it is time to set up a USER REPOSITORY and a PET REPOSITORY CLASS that will call both entities and
-database as desired:
+database as desired
+
+## THE FULL PICTURE - DEVELPMENT DIAGRAM<br>
+<img src="images/models_and_repository_diagram.png" alt="models_and_repository_diagram" width="650" height=""><br>
+
 

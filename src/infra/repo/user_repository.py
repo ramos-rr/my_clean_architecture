@@ -1,7 +1,7 @@
-from src.infra.config import DbConnectionHandler
 from typing import Type
-from src.infra.entities import Users
-from collections import namedtuple
+from src.infra.config import DbConnectionHandler
+from src.domain.models import Users
+from src.infra.entities import Users as UsersModel
 
 
 class UserRepository:
@@ -15,14 +15,14 @@ class UserRepository:
         params: password: New user's password
         """
 
-        insert_data = namedtuple("Users", "id, name, password")
-
         with database as db_conn:
             try:
-                new_user = Users(name=name, password=password)
+                new_user = UsersModel(name=name, password=password)
                 db_conn.session.add(new_user)
                 db_conn.session.commit()
-                return insert_data(id=new_user.id, name=new_user.name, password=new_user.password)
+                return Users(
+                    id=new_user.id, name=new_user.name, password=new_user.password
+                )
             except:
                 db_conn.session.rollback()
             finally:
