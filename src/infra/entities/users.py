@@ -20,3 +20,9 @@ class Users(Base):
     # Set a string for verification (DB pattern)
     def __rep__(self):
         return f'Urs [name={self.name}]'
+
+    # Compare this class to an outer class to check the similarities
+    def __eq__(self, other):
+        if (self.id == other.id) and (self.name == other.name) and (self.password == other.password):
+            return True
+        return False
