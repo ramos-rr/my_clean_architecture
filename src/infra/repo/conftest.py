@@ -11,14 +11,9 @@ def fake():
 
 
 @pytest.fixture(scope='session')
-def db_conn():
+def engine():
     db_conn_fix = DbConnectionHandler()
-    return db_conn_fix
-
-
-@pytest.fixture(scope='session')
-def engine(db_conn):
-    engine_fix = db_conn.get_engine()
+    engine_fix = db_conn_fix.get_engine()
     return engine_fix
 
 
@@ -32,6 +27,12 @@ def repo():
 def name(fake):
     name_fix = fake.name()
     return name_fix
+
+
+@pytest.fixture(scope='session')
+def user_id(fake):
+    user_id_fix = fake.random_number(digits=5)
+    return user_id_fix
 
 
 @pytest.fixture(scope='session')
