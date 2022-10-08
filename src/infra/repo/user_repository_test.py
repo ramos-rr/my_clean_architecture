@@ -1,4 +1,4 @@
-import pytest
+# import pytest
 # import datetime
 # from src.infra.entities import Users
 # from faker import Faker

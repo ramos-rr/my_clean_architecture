@@ -1,4 +1,4 @@
 [flake8]
 max-line-length=120
-exclude=.venv, __init__.py
+exclude=.venv, __init__.py, create_db.py
 ignore=E722
