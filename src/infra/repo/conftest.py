@@ -18,15 +18,15 @@ def engine():
 
 
 @pytest.fixture(scope='session')
-def repo():
+def userrepo():
     repo_fix = UserRepository()
     return repo_fix
 
 
 @pytest.fixture(scope='session')
-def name(fake):
-    name_fix = fake.name()
-    return name_fix
+def username(fake):
+    username_fix = fake.name()
+    return username_fix
 
 
 @pytest.fixture(scope='session')
@@ -39,3 +39,9 @@ def user_id(fake):
 def password(fake):
     password_fix = fake.word()
     return password_fix
+
+
+@pytest.fixture(scope='session')
+def db_conn():
+    with DbConnectionHandler() as session_fixture:
+        return session_fixture

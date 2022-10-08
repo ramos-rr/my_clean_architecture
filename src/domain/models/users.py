@@ -1,4 +1,4 @@
 from collections import namedtuple
 
 
-Users = namedtuple("Users", "id, name, password")
+Users = namedtuple("Users", "id, username, password, register_date")

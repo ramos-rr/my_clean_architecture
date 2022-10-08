@@ -21,17 +21,17 @@ class Pets(Base):
     # Set up ID, primary_key=True
     id = Column(Integer, primary_key=True)
     # Set up NAME
-    name = Column(String(20), nullable=False, unique=True)
+    petname = Column(String(20), nullable=False, unique=True)
     specie = Column(SqlEnum(AnimalTypes), nullable=False)
     age = Column(Integer)
     user_id = Column(Integer, ForeignKey("users.id"))
 
     def __rep__(self):
-        return f'Pet: [name={self.name}, specie={self.specie}, user_id={self.user_id}]'
+        return f'Pet: [name={self.petname}, specie={self.specie}, user_id={self.user_id}]'
 
     def __eq__(self, other):
         if (self.id == other.id) and \
-                (self.name == other.name) and \
+                (self.petname == other.petname) and \
                 (self.specie == other.specie) and \
                 (self.user_id == other.user_id) and\
                 (self.age == other.age):
