@@ -37,7 +37,7 @@ def user_id(fake):
 
 @pytest.fixture(scope='session')
 def password(fake):
-    password_fix = fake.word()
+    password_fix = f'{fake.word()}{fake.random_number(digits=2)}'
     return password_fix
 
 
