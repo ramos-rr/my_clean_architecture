@@ -1,11 +1,15 @@
-# import pytest
+import pytest
 # import datetime
 # from src.infra.entities import Users
 # from faker import Faker
 #
 # faker = Faker()
+from src.infra.errors import UserNameNotProvidedError, UserNameTypeError, PasswordNotProvidedError, \
+    PasswordWithoutLettersError, PasswordWithoutNumbersError, PasswordTypeError, InsufficientDataError, \
+    UserIdNotIntegerError
 
 
+# TESTS FOR INSERT USER
 def test_insert_user(userrepo, username, password, engine):
     # SQL Command
     new_user = userrepo.insert_user(username=username, password=password)
@@ -17,6 +21,37 @@ def test_insert_user(userrepo, username, password, engine):
     assert new_user.username == query_user.username
     assert new_user.password == query_user.password
 
+
+def test_inset_user_name_not_provided_error(userrepo, password):
+    with pytest.raises(UserNameNotProvidedError):
+        new_user = userrepo.insert_user(username=None, password=password)
+        return new_user
+
+
+def test_inset_user_name_type_error(userrepo, password):
+    with pytest.raises(UserNameTypeError):
+        new_user = userrepo.insert_user(username=134, password=password)
+        return new_user
+
+
+def test_inset_user_password_not_provided_error(userrepo, username):
+    with pytest.raises(PasswordNotProvidedError):
+        _ = userrepo.insert_user(username=username, password=None)
+
+
+def test_inset_user_password_without_letters_error(userrepo, username):
+    with pytest.raises(PasswordWithoutLettersError):
+        _ = userrepo.insert_user(username=username, password='1234')
+
+
+def test_inset_user_password_type_error(userrepo, username):
+    with pytest.raises(PasswordTypeError):
+        _ = userrepo.insert_user(username=username, password=1234)
+
+
+def test_inset_user_password_without_numbers_error(userrepo, username):
+    with pytest.raises(PasswordWithoutNumbersError):
+        _ = userrepo.insert_user(username=username, password='abcd')
 
 # @pytest.mark.parametrize(
 #     'user_list', [
@@ -30,6 +65,7 @@ def test_insert_user(userrepo, username, password, engine):
 #     db_conn.session.commit()
 
 
+# TESTS FOR SELECT USER
 def test_select_user(username, password, engine, user_id, userrepo):
     from src.infra.entities.users import Users as UsersEntity
     """ Should select a user in Users table and compare it"""
@@ -45,3 +81,18 @@ def test_select_user(username, password, engine, user_id, userrepo):
     assert data in query_user3
 
     engine.execute(f"DELETE FROM users WHERE id='{user_id}'")
+
+
+def test_select_user_insufficient_data_error(userrepo):
+    with pytest.raises(InsufficientDataError):
+        userrepo.select_user()
+
+
+def test_select_user_name_type_error(userrepo):
+    with pytest.raises(UserNameTypeError):
+        userrepo.select_user(username=123)
+
+
+def test_select_user_id_not_integer_error(userrepo):
+    with pytest.raises(UserIdNotIntegerError):
+        userrepo.select_user(user_id='abc')
