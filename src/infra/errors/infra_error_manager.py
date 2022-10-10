@@ -1,13 +1,12 @@
 from src.infra.errors import UserNameNotProvidedError, PasswordNotProvidedError, UserNameTypeError, \
     PasswordWithoutLettersError, PasswordWithoutNumbersError, InsufficientDataError, UserIdNotIntegerError, \
-    PasswordTypeError
+    PasswordTypeError, DatabaseError
 
 
 class ErrorManager:
     """
     Class ErrorManager to handle all types of errors related to Repositories and Entities
     """
-
     @classmethod
     def validate_insert_user(cls, username, password):
         cls.__username_error(username)
@@ -21,6 +20,10 @@ class ErrorManager:
             raise UserNameTypeError('Name type invalid. It must be alphabetic')
         elif user_id and not isinstance(user_id, int):
             raise UserIdNotIntegerError('User ID must be numeric')
+
+    @classmethod
+    def database_error(cls, message: any, code: any):
+        raise DatabaseError(message, code)
 
     @classmethod
     def __username_error(cls, username):

@@ -1,3 +1,4 @@
+from .database_error import DatabaseError
 from .user_name_error import UserNameNotProvidedError, UserNameTypeError
 from .password_error import PasswordNotProvidedError, PasswordWithoutNumbersError, PasswordWithoutLettersError, \
     PasswordTypeError

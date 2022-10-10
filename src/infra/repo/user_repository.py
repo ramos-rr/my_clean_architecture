@@ -30,7 +30,7 @@ class UserRepository:
                     register_date=new_user.register_date
                 )
             except Exception as error:
-                print(error.args)
+                ErrorManager.database_error(error.args, error.code)
                 db_conn.session.rollback()
             finally:
                 db_conn.session.close()
@@ -69,7 +69,7 @@ class UserRepository:
             return query_data
 
         except Exception as error:
-            print(error.args)
+            ErrorManager.database_error(error.args, error.code)
             db_conn.session.rollback()
         finally:
             db_conn.session.close()
