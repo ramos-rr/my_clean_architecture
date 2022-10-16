@@ -8,6 +8,7 @@ __pycache__/
 
 # SQLITE DATABASE
 storage.db
+storage.test.db
 
 # C extensions
 *.so

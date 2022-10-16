@@ -18,7 +18,7 @@ class DbConnectionHandler:
 
     # Define a method to enter DB to garantee some levels of security
     def __enter__(self):
-        engine = create_engine(self.__connection_string)
+        engine = self.get_engine()
         session_maker = sessionmaker()
         self.session = session_maker(bind=engine)
         return self

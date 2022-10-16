@@ -78,3 +78,9 @@ def specie():
 def age(fake):
     age_fix = fake.random_number(digits=1)
     return age_fix
+
+
+@pytest.fixture(scope='session')
+def pet_id(fake):
+    pet_id_fix = fake.random_number(digits=5)
+    return pet_id_fix
