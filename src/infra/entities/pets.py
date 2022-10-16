@@ -26,7 +26,7 @@ class Pets(Base):
     specie = Column(SqlEnum(AnimalTypes), nullable=False)
     age = Column(Integer)
     user_id = Column(Integer, ForeignKey("users.id"))
-    register_date = Column(DateTime(timezone=True), default=datetime.datetime.now())
+    register_date = Column(DateTime(timezone=True), nullable=False, default=datetime.datetime.now())
 
     def __rep__(self):
         return f'Pet: [name={self.petname}, specie={self.specie}, user_id={self.user_id}]'
