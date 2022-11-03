@@ -1,4 +1,5 @@
-name: Pytest with GitAction
+name: Pytest with GitActions
+
 
 on:
   push:
@@ -26,6 +27,10 @@ jobs:
       run: |
         pipenv install -d
         pipenv sync
+
+#     Create DB for tests
+    - name: Create DB
+      run: pipenv run create_db.py
 
 #     Run tests
     - name: Run Tests

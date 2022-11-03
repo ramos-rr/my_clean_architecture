@@ -134,3 +134,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Importation shortcuts for terminal
+import_shotcut_for_terminal.py
