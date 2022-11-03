@@ -1,7 +1,7 @@
 import enum
 from sqlalchemy import Column, String, Integer, ForeignKey, DateTime, Enum as SqlEnum
+from sqlalchemy.sql.functions import now
 from src.infra.config.db_base import Base
-import datetime
 
 
 class AnimalTypes(enum.Enum):
@@ -26,7 +26,7 @@ class Pets(Base):
     specie = Column(SqlEnum(AnimalTypes), nullable=False)
     age = Column(Integer)
     user_id = Column(Integer, ForeignKey("users.id"))
-    register_date = Column(DateTime(timezone=True), nullable=False, default=datetime.datetime.now())
+    register_date = Column(DateTime(timezone=True), default=now(), onupdate=now())
 
     def __rep__(self):
         return f'Pet: [name={self.petname}, specie={self.specie}, user_id={self.user_id}]'

@@ -1,7 +1,7 @@
 from sqlalchemy import Column, String, Integer, DateTime
 from sqlalchemy.orm import relationship
 from src.infra.config import Base
-import datetime
+from sqlalchemy.sql.functions import now
 
 
 class Users(Base):
@@ -18,7 +18,7 @@ class Users(Base):
     # Set PET_ID as a relationship with pets class
     pet_id = relationship("Pets")
     # Register date
-    register_date = Column(DateTime(timezone=True), default=datetime.datetime.now())
+    register_date = Column(DateTime(timezone=True), onupdate=now())
 
     # Set a string for verification (DB pattern)
     def __rep__(self):
