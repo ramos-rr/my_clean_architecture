@@ -5,7 +5,7 @@ import datetime
 
 
 class AnimalTypes(enum.Enum):
-    """ Defining species for Pets """
+    """ Defining species for Pets to build up a list of allowed species"""
 
     dog = 'dog'
     cat = 'cat'

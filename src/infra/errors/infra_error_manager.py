@@ -87,7 +87,7 @@ class ErrorManager:
     @classmethod
     def __age_error(cls, age):
         if not isinstance(age, int):
-            raise AgeNotIntegerError(message='Age must be integer. Pleas check')
+            raise AgeNotIntegerError(message='Age must be integer. Please check')
 
     @classmethod
     def __user_id_error(cls, user_id):
