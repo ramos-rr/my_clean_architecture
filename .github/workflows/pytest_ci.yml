@@ -30,7 +30,7 @@ jobs:
 
 #     Create DB for tests
     - name: Create DB
-      run: pipenv run create_db.py
+      run: pipenv run python create_db.py
 
 #     Run tests
     - name: Run Tests
