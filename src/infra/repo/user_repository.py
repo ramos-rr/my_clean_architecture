@@ -1,12 +1,13 @@
 import datetime
 from typing import List
+from src.data.interfaces import UserRepositoryInterface
 from src.infra.config import DbConnectionHandler
 from src.domain.models import Users
 from src.infra.entities import Users as UsersEntity
 from src.infra.errors import ErrorManager
 
 
-class UserRepository:
+class UserRepository(UserRepositoryInterface):
     """ Class to manage Users """
 
     @classmethod

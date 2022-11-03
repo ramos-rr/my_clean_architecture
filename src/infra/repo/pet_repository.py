@@ -1,4 +1,5 @@
 from typing import List, Type
+from src.data.interfaces import PetRepositoryInterface
 from src.infra.config import DbConnectionHandler
 from src.infra.entities.pets import Pets as PetsEntity
 from src.domain.models import Pets
@@ -6,7 +7,7 @@ from src.infra.errors import ErrorManager
 from datetime import datetime
 
 
-class PetRepository:
+class PetRepository(PetRepositoryInterface):
     """
     Class to manage PET REPOSITORY
     """
