@@ -1,11 +1,12 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from decouple import config
 
 
 class DbConnectionHandler:
 
     def __init__(self):
-        self.__connection_string = "sqlite:///storage.db"  # This string is need by sqlalchemy
+        self.__connection_string = config('DATABASE_STRING')  # This string is need by sqlalchemy
         self.session = None
 
     def get_engine(self):

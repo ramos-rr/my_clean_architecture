@@ -98,4 +98,10 @@ database as desired
 ## THE FULL PICTURE - DEVELPMENT DIAGRAM<br>
 <img src="images/models_and_repository_diagram.png" alt="models_and_repository_diagram" width="650" height=""><br>
 
+## USECASE DIAGRAM
+<img src="images/usecase_diagram.png" alt="usecase_diagram" width="550" height=""><br>
+- ACTOR: Our user. He can performe all this actions described in the diagram;<br>
+- ACTIONS: Generic descriptions of all possible interaction allowed for this actor;<br>
+- INCLUDE : A small dependency brought by diagram telling that a User must be related to a Pet everytime;<br>
+- BY METHODS : List of required information to perform a database query.<br>
 

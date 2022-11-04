@@ -1,5 +1,4 @@
 import random
-
 import pytest
 from src.infra.config import DbConnectionHandler
 from src.infra.repo import UserRepository
