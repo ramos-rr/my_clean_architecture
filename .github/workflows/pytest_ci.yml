@@ -28,6 +28,10 @@ jobs:
         pipenv install -d
         pipenv sync
 
+#    Create .env file
+    - name: Create .env file
+      run: cp contrib/env-sample .env
+
 #     Run tests
     - name: Run Tests
       run: pipenv run pytest -s -v
