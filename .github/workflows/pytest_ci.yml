@@ -28,10 +28,6 @@ jobs:
         pipenv install -d
         pipenv sync
 
-#     Create DB for tests
-    - name: Create DBase
-      run: pipenv run python create_db.py
-
 #     Run tests
     - name: Run Tests
       run: pipenv run pytest -s -v
