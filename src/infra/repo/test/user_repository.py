@@ -1,4 +1,3 @@
-import datetime
 from typing import List
 from src.data.interfaces import UserRepositoryInterface
 from src.infra.config import DbConnectionHandler
@@ -7,40 +6,30 @@ from src.infra.entities import Users as UsersEntity
 from src.infra.errors import ErrorManager
 
 
-class UserRepository(UserRepositoryInterface):
-    """ Class to manage Users """
+class UserRepositorySpy(UserRepositoryInterface):
+    """ Class to mock UserRepository to serve as a test feature in the project """
 
     @classmethod
     def insert_user(cls, username: str, password: str) -> Users:
         """
-        Method to insert new user
+        Method to test insertion of a new user
         params: username: New User's name,
         params: password: New user's password
         """
-        # Validate Data: Username and Password
         username, password = cls.__validate_insert_user(username=username, password=password)
-        with DbConnectionHandler() as db_conn:
-            try:
-                new_user = UsersEntity(username=username, password=password, register_date=datetime.datetime.now())
-                db_conn.session.add(new_user)
-                db_conn.session.commit()
-                return Users(
-                    id=new_user.id,
-                    username=new_user.username,
-                    password=new_user.password,
-                    register_date=new_user.register_date,
-                    session=db_conn.session.bind
-                )
-            except Exception as error:
-                try:
-                    error.__getattribute__('code')
-                except:
-                    ErrorManager.database_error(error.args)
-                else:
-                    ErrorManager.database_error(error.args, error.code)
-                db_conn.session.rollback()
-            finally:
-                db_conn.session.close()
+
+        from faker import Faker
+        from datetime import datetime
+        fake = Faker()
+        now = datetime.now()
+
+        return Users(
+            id=fake.random_number(digits=5),
+            username=username,
+            password=password,
+            register_date=now,
+            session='test.test.test'
+        )
 
     @classmethod
     def select_user(cls, user_id: int = None, username: str = None) -> List[Users]:
