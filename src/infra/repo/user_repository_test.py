@@ -7,6 +7,10 @@ import pytest
 from src.infra.errors import UserNameNotProvidedError, UserNameTypeError, PasswordNotProvidedError, \
     PasswordWithoutLettersError, PasswordWithoutNumbersError, PasswordTypeError, InsufficientDataError, \
     UserIdNotIntegerError
+from src.infra.config import CreateDataBase
+
+# Check for DB path. If it doesn't exist, system will create one with tables
+CreateDataBase.create_db()
 
 
 # TESTS FOR INSERT USER
