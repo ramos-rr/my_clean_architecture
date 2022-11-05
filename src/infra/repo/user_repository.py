@@ -28,7 +28,8 @@ class UserRepository(UserRepositoryInterface):
                     id=new_user.id,
                     username=new_user.username,
                     password=new_user.password,
-                    register_date=new_user.register_date
+                    register_date=new_user.register_date,
+                    session=db_conn.session.bind
                 )
             except Exception as error:
                 try:
