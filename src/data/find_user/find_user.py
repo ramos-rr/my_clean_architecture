@@ -23,7 +23,7 @@ class FindUser(FindUserInterface):
         except Exception as error:
             return {"success": False, "detail": error}
 
-    def by_username(self, username: str) -> Dict[bool, Users]:
+    def by_username(self, username: str) -> Dict[bool, List[Users]]:
         """
         Method to find user by its username
         :param username: User name
@@ -36,7 +36,7 @@ class FindUser(FindUserInterface):
         except Exception as error:
             return {"success": False, "detail": error}
 
-    def by_user_id_and_username(self, user_id: int, username: str) -> Dict[bool, Users]:
+    def by_user_id_and_username(self, user_id: int, username: str) -> Dict[bool, List[Users]]:
         """
         Method to find user by its User ID and username
         :param user_id: User ID
