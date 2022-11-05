@@ -140,3 +140,6 @@ dmypy.json
 
 # Importation shortcuts for terminal
 import_shotcut_for_terminal.py
+
+# Draft
+draft.py
