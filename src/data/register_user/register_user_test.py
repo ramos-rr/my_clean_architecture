@@ -1,6 +1,6 @@
 import pytest
 from faker import Faker
-from .register import RegisterUser
+from .register_user import RegisterUser
 from src.infra.repo.test import UserRepositorySpy
 
 fake = Faker()
