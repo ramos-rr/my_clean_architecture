@@ -16,8 +16,7 @@ class UserRepositorySpy(UserRepositoryInterface):
                  id=fake.random_number(digits=5),
                  usename=fake.name(),
                  password='teste123',
-                 register_date=now,
-                 session=None):
+                 ):
         self.id = id
         self.usename = usename
         self.password = password

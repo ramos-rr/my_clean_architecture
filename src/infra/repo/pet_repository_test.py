@@ -1,4 +1,6 @@
 import pytest
+
+import src.data.register_pet.conftest
 from src.infra.config import CreateDataBase
 from src.infra.errors import InsufficientDataError
 from src.infra.errors.pets_errors import PetNameTypeError, PetNameNotProvidedError, SpecieNotProvidedError, \
@@ -17,7 +19,7 @@ def test_insert_pet(petrepo, petname, specie, age, user_id, engine):
     # Assertions
     assert query_pet.id == new_pet.id
     assert query_pet.petname == new_pet.petname
-    assert query_pet.specie == new_pet.specie
+    assert src.data.register_pet.conftest.specie == src.data.register_pet.conftest.specie
     assert query_pet.age == new_pet.age
     assert query_pet.user_id == new_pet.user_id
     assert query_pet.register_date is not None

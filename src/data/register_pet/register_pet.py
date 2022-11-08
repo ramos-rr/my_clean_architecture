@@ -12,7 +12,7 @@ class RegisterPet(RegisterPetInterface):
         self.user_repository = user_repository
         self.pet_repository = pet_repository
 
-    def register(self, petname: str, specie: str, age: int, user_id: int) -> Dict[bool, Pets]:
+    def register(self, petname: str, specie: str, age: int, user_id: int) -> Dict[bool, Pets] | Dict:
         """
         Abstractmethod to register pet usecase
         :param petname: Pet name as string
@@ -22,15 +22,16 @@ class RegisterPet(RegisterPetInterface):
         :return: Dictionary with a success message and Pets models
         """
         response = None
-        user = self.__find_user(user_id)
-        if user:
+        query_user = self.__find_user(user_id)
+        if query_user["success"]:
             try:
                 response = self.pet_repository.insert_pet(petname=petname, specie=specie, age=age, user_id=user_id)
                 return {"success": True, "data": response}
             except Exception as error:
                 return {"success": False, "detail": error}
         else:
-            return {"success": False, "data": response}
+            response = query_user['detail']
+            return {"success": False, "detail": response}
 
     def __find_user(self, user_id: int):
         """
@@ -38,4 +39,4 @@ class RegisterPet(RegisterPetInterface):
         :param user_id: Pet owner ID
         """
         response = FindUser(self.user_repository).by_user_id(user_id=user_id)
-        return response["success"]
+        return response

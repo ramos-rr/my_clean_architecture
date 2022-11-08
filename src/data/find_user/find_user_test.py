@@ -55,6 +55,7 @@ def test_find_user_by_username_no_result_found_error():
     repo = UserRepositorySpy()
     find = FindUser(repo)
     query = find.by_username(fake_username)
+    # Assertion expect to raise NoResultFound error
     assert type(query['detail']).__name__ == NoResultFoundError.__name__
     assert not query["success"]
 
@@ -63,5 +64,6 @@ def test_find_user_by_user_id_and_username_no_result_found_error():
     repo = UserRepositorySpy()
     find = FindUser(repo)
     query = find.by_user_id_and_username(user_id=9999999, username='aaa')
+    # Assertion expect to raise NoResultFound error
     assert type(query['detail']).__name__ == NoResultFoundError.__name__
     assert not query["success"]
