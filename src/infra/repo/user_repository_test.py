@@ -6,7 +6,7 @@ import pytest
 # faker = Faker()
 from src.infra.errors import UserNameNotProvidedError, UserNameTypeError, PasswordNotProvidedError, \
     PasswordWithoutLettersError, PasswordWithoutNumbersError, PasswordTypeError, InsufficientDataError, \
-    UserIdNotIntegerError
+    UserIdNotIntegerError, NoResultFoundError
 from src.infra.config import CreateDataBase
 
 # Check for DB path. If it doesn't exist, system will create one with tables
@@ -100,3 +100,8 @@ def test_select_user_name_type_error(userrepo):
 def test_select_user_id_not_integer_error(userrepo):
     with pytest.raises(UserIdNotIntegerError):
         userrepo.select_user(user_id='abc')
+
+
+def test_select_user_no_result_found_error(userrepo):
+    with pytest.raises(NoResultFoundError):
+        userrepo.select_user(user_id=999999)

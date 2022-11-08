@@ -1,8 +1,13 @@
 import pytest
+from src.infra.config import CreateDataBase
 from src.infra.errors import InsufficientDataError
 from src.infra.errors.pets_errors import PetNameTypeError, PetNameNotProvidedError, SpecieNotProvidedError, \
     SpecieNotAllowedError, SpecieTypeError, AgeNotIntegerError, PetIdNotIntegerError
 from src.infra.errors.users_errors.user_id_error import UserIdNotProvidedError, UserIdNotIntegerError
+
+
+# Check for DB path. If it doesn't exist, system will create one with tables
+CreateDataBase.create_db()
 
 
 def test_insert_pet(petrepo, petname, specie, age, user_id, engine):

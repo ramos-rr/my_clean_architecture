@@ -1,4 +1,4 @@
 [flake8]
 max-line-length=120
-exclude=.venv, __init__.py, import_shotcut_for_terminal.py, create_db.py
+exclude=.venv, __init__.py, import_shotcut_for_terminal.py, create_db.py, draft.py
 ignore=E722
