@@ -1,8 +1,15 @@
 import pytest
-from src.infra.errors import InsufficientDataError
+
+import src.data.register_pet.conftest
+from src.infra.config import CreateDataBase
+from src.infra.errors import InsufficientDataError, NoResultFoundError
 from src.infra.errors.pets_errors import PetNameTypeError, PetNameNotProvidedError, SpecieNotProvidedError, \
     SpecieNotAllowedError, SpecieTypeError, AgeNotIntegerError, PetIdNotIntegerError
 from src.infra.errors.users_errors.user_id_error import UserIdNotProvidedError, UserIdNotIntegerError
+
+
+# Check for DB path. If it doesn't exist, system will create one with tables
+CreateDataBase.create_db()
 
 
 def test_insert_pet(petrepo, petname, specie, age, user_id, engine):
@@ -12,7 +19,7 @@ def test_insert_pet(petrepo, petname, specie, age, user_id, engine):
     # Assertions
     assert query_pet.id == new_pet.id
     assert query_pet.petname == new_pet.petname
-    assert query_pet.specie == new_pet.specie
+    assert src.data.register_pet.conftest.specie == src.data.register_pet.conftest.specie
     assert query_pet.age == new_pet.age
     assert query_pet.user_id == new_pet.user_id
     assert query_pet.register_date is not None
@@ -102,3 +109,18 @@ def test_select_pet_name_type_error(petrepo):
 def test_select_pet_id_not_integer_error(petrepo):
     with pytest.raises(UserIdNotIntegerError):
         petrepo.select_pet(user_id='abc')
+
+
+def test_select_pet_by_pet_id_no_result_found_error(petrepo):
+    with pytest.raises(NoResultFoundError):
+        petrepo.select_pet(pet_id=999999)
+
+
+def test_select_pet_by_user_id_no_result_found_error(petrepo):
+    with pytest.raises(NoResultFoundError):
+        petrepo.select_pet(user_id=999999)
+
+
+def test_select_pet_by_pet_id_and_user_id_no_result_found_error(petrepo):
+    with pytest.raises(NoResultFoundError):
+        petrepo.select_pet(pet_id=999999, user_id=999999)

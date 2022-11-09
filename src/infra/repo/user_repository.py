@@ -32,13 +32,9 @@ class UserRepository(UserRepositoryInterface):
                     session=db_conn.session.bind
                 )
             except Exception as error:
-                try:
-                    error.__getattribute__('code')
-                except:
-                    ErrorManager.database_error(error.args)
-                else:
-                    ErrorManager.database_error(error.args, error.code)
                 db_conn.session.rollback()
+                ErrorManager.database_error(error)
+
             finally:
                 db_conn.session.close()
 
@@ -76,13 +72,9 @@ class UserRepository(UserRepositoryInterface):
             return query_data
 
         except Exception as error:
-            try:
-                error.__getattribute__('code')
-            except:
-                ErrorManager.database_error(error.args)
-            else:
-                ErrorManager.database_error(error.args, error.code)
             db_conn.session.rollback()
+            ErrorManager.database_error(error)
+
         finally:
             db_conn.session.close()
 

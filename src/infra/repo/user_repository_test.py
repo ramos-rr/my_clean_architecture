@@ -6,7 +6,7 @@ import pytest
 # faker = Faker()
 from src.infra.errors import UserNameNotProvidedError, UserNameTypeError, PasswordNotProvidedError, \
     PasswordWithoutLettersError, PasswordWithoutNumbersError, PasswordTypeError, InsufficientDataError, \
-    UserIdNotIntegerError
+    UserIdNotIntegerError, NoResultFoundError, IntegrityError
 from src.infra.config import CreateDataBase
 
 # Check for DB path. If it doesn't exist, system will create one with tables
@@ -24,6 +24,15 @@ def test_insert_user(userrepo, username, password, engine):
     assert new_user.id == query_user.id
     assert new_user.username == query_user.username
     assert new_user.password == query_user.password
+
+
+def test_insert_user_duplicate_username_error(userrepo, username, password, engine):
+    with pytest.raises(IntegrityError):
+        engine.execute(f"INSERT INTO users (username, password) VALUES ('{username}','{password}');")
+        try:
+            _ = userrepo.insert_user(username=username, password=password)
+        finally:
+            engine.execute(f"DELETE FROM users WHERE username='{username}'")
 
 
 def test_inset_user_name_not_provided_error(userrepo, password):
@@ -100,3 +109,8 @@ def test_select_user_name_type_error(userrepo):
 def test_select_user_id_not_integer_error(userrepo):
     with pytest.raises(UserIdNotIntegerError):
         userrepo.select_user(user_id='abc')
+
+
+def test_select_user_no_result_found_error(userrepo):
+    with pytest.raises(NoResultFoundError):
+        userrepo.select_user(user_id=999999)

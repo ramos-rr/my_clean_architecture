@@ -3,7 +3,7 @@ from src.data.interfaces import PetRepositoryInterface
 from src.infra.config import DbConnectionHandler
 from src.infra.entities.pets import Pets as PetsEntity
 from src.domain.models import Pets
-from src.infra.errors import ErrorManager
+from src.infra.errors import ErrorManager, NoResultFoundError
 from datetime import datetime
 
 
@@ -75,16 +75,22 @@ class PetRepository(PetRepositoryInterface):
                     data = db_conn.session.query(PetsEntity).filter_by(id=pet_id, user_id=user_id).one()
                     data = cls.__get_specie_string(data)
                     query_data = data
+
+            if len(query_data) == 0:
+                raise NoResultFoundError(message="No row was found when one was required", code=None)
+
             return query_data
 
         except Exception as error:
-            try:
-                error.__getattribute__('code')
-            except:
-                ErrorManager.database_error(error.args)
-            else:
-                ErrorManager.database_error(error.args, error.code)
             db_conn.session.rollback()
+            ErrorManager.database_error(error)
+            # try:
+            #     error.__getattribute__('code')
+            # except:
+            #     ErrorManager.database_error(error.args)
+            # else:
+            #     ErrorManager.database_error(error.args, error.code)
+            # db_conn.session.rollback()
 
         finally:
             db_conn.session.close()
