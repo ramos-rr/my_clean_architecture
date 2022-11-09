@@ -32,13 +32,15 @@ class UserRepository(UserRepositoryInterface):
                     session=db_conn.session.bind
                 )
             except Exception as error:
-                try:
-                    error.__getattribute__('code')
-                except:
-                    ErrorManager.database_error(error.args)
-                else:
-                    ErrorManager.database_error(error.args, error.code)
                 db_conn.session.rollback()
+                ErrorManager.database_error(error)
+            #     try:
+            #         error.__getattribute__('code')
+            #     except:
+            #         ErrorManager.database_error(error.args)
+            #     else:
+            #         ErrorManager.database_error(error.args, error.code)
+            #     db_conn.session.rollback()
             finally:
                 db_conn.session.close()
 
@@ -76,16 +78,18 @@ class UserRepository(UserRepositoryInterface):
             return query_data
 
         except Exception as error:
-            try:
-                db_conn.session.rollback()
-                error.__getattribute__('code')
-            except:
-                ErrorManager.database_error(error)
-            else:
-                error_type = str(type(error))
-                sep = error_type.rfind('.')
-                error_type = error_type[sep + 1:-2]
-                ErrorManager.database_error(error_type=error_type, message=error.args, code=error.code)
+            db_conn.session.rollback()
+            ErrorManager.database_error(error)
+        #     try:
+        #         db_conn.session.rollback()
+        #         error.__getattribute__('code')
+        #     except:
+        #         ErrorManager.database_error(error)
+        #     else:
+        #         error_type = str(type(error))
+        #         sep = error_type.rfind('.')
+        #         error_type = error_type[sep + 1:-2]
+        #         ErrorManager.database_error(error_type=error_type, message=error.args, code=error.code)
         finally:
             db_conn.session.close()
 

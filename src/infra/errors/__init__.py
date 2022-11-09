@@ -1,4 +1,4 @@
-from .database_error import DatabaseError
+from .database_error import DatabaseError, IntegrityError
 from src.infra.errors.users_errors.user_name_error import UserNameNotProvidedError, UserNameTypeError
 from src.infra.errors.users_errors.password_error import PasswordNotProvidedError, PasswordWithoutNumbersError, \
     PasswordWithoutLettersError, PasswordTypeError
