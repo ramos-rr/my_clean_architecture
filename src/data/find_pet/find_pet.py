@@ -5,7 +5,7 @@ from src.data.interfaces import PetRepositoryInterface as PetRepository
 
 
 class FindPet(FindPetInterface):
-    """ Abstractclass to manage usecase FindPet """
+    """ Class to manage usecase FindPet """
 
     def __init__(self, pet_repository: Type[PetRepository]):
         self.pet_repository = pet_repository
