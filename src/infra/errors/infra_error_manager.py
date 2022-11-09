@@ -1,6 +1,6 @@
 from src.infra.errors import UserNameNotProvidedError, PasswordNotProvidedError, UserNameTypeError, \
     PasswordWithoutLettersError, PasswordWithoutNumbersError, InsufficientDataError, UserIdNotIntegerError, \
-    PasswordTypeError, DatabaseError, UserIdNotProvidedError
+    PasswordTypeError, DatabaseError, UserIdNotProvidedError, NoResultFoundError, IntegrityError
 from src.infra.errors.pets_errors import PetNameNotProvidedError, PetNameTypeError, SpecieNotProvidedError,\
     SpecieNotAllowedError, SpecieTypeError, AgeNotIntegerError, PetIdNotIntegerError
 
@@ -44,8 +44,34 @@ class ErrorManager:
             cls.__user_id_error(user_id)
 
     @classmethod
-    def database_error(cls, message: any = None, code: any = None):
-        raise DatabaseError(message, code)
+    # def database_error(cls, error_type: any = None, message: any = None, code: any = None):
+    #     if not error_type:
+    #         raise DatabaseError(message, code)
+    #     if error_type:
+    #         if error_type == 'NoResultFound':
+    #             raise NoResultFoundError(message, code)
+    def database_error(cls, error):
+
+        error_type = str(type(error))
+        sep = error_type.rfind('.')
+        error_type = error_type[sep + 1:-2]
+
+        try:
+            message = str(error.args[0])
+        except:
+            message = error.args
+
+        try:
+            code = error.__getattribute__("code")
+        except:
+            code = None
+
+        if error_type == 'NoResultFound' or error_type == 'NoResultFoundError':
+            raise NoResultFoundError(message=message, code=code)
+        if error_type == 'IntegrityError':
+            raise IntegrityError(message=message, code=code)
+        else:
+            raise DatabaseError(message=message, code=code)
 
     @classmethod
     def __username_error(cls, username):

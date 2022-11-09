@@ -22,4 +22,4 @@ def test_database_error():
         try:
             _ = engine.execute("SELECT * FROM users WHERE id='{}';".format(1)).fetchone()
         except Exception as error:
-            ErrorManager.database_error(message=error.args, code=error.code)
+            ErrorManager.database_error(error)
