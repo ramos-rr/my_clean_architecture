@@ -66,7 +66,7 @@ class ErrorManager:
         except:
             code = None
 
-        if error_type == 'NoResultFound':
+        if error_type == 'NoResultFound' or error_type == 'NoResultFoundError':
             raise NoResultFoundError(message=message, code=code)
         if error_type == 'IntegrityError':
             raise IntegrityError(message=message, code=code)

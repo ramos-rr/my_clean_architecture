@@ -13,11 +13,11 @@ class UserRepositorySpy(UserRepositoryInterface):
     """ Class to mock UserRepository to serve as a test feature in the project """
 
     def __init__(self,
-                 id=fake.random_number(digits=5),
+                 user_id=fake.random_number(digits=5),
                  usename=fake.name(),
                  password='teste123',
                  ):
-        self.id = id
+        self.id = user_id
         self.usename = usename
         self.password = password
         self.register_date = now

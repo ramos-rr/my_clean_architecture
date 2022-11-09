@@ -2,7 +2,7 @@ import pytest
 
 import src.data.register_pet.conftest
 from src.infra.config import CreateDataBase
-from src.infra.errors import InsufficientDataError
+from src.infra.errors import InsufficientDataError, NoResultFoundError
 from src.infra.errors.pets_errors import PetNameTypeError, PetNameNotProvidedError, SpecieNotProvidedError, \
     SpecieNotAllowedError, SpecieTypeError, AgeNotIntegerError, PetIdNotIntegerError
 from src.infra.errors.users_errors.user_id_error import UserIdNotProvidedError, UserIdNotIntegerError
@@ -109,3 +109,18 @@ def test_select_pet_name_type_error(petrepo):
 def test_select_pet_id_not_integer_error(petrepo):
     with pytest.raises(UserIdNotIntegerError):
         petrepo.select_pet(user_id='abc')
+
+
+def test_select_pet_by_pet_id_no_result_found_error(petrepo):
+    with pytest.raises(NoResultFoundError):
+        petrepo.select_pet(pet_id=999999)
+
+
+def test_select_pet_by_user_id_no_result_found_error(petrepo):
+    with pytest.raises(NoResultFoundError):
+        petrepo.select_pet(user_id=999999)
+
+
+def test_select_pet_by_pet_id_and_user_id_no_result_found_error(petrepo):
+    with pytest.raises(NoResultFoundError):
+        petrepo.select_pet(pet_id=999999, user_id=999999)
