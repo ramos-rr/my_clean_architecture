@@ -16,10 +16,9 @@ class HttpRequest:
 class HttpResponse:
     """ Class to http_response representation """
 
-    def __init__(self, header: Dict = None, body: Dict = None, query: Dict = None):
-        self.header = header
+    def __init__(self, status_code: int, body: any):
+        self.status_code = status_code
         self.body = body
-        self.query = query
 
     def __repr__(self):
-        return f"HttpResponse (header={self.header}, body={self.body}, query={self.query})"
+        return f"HttpResponse (status_code={self.status_code}, body={self.body})"
