@@ -1,4 +1,4 @@
-from .find_user_controller import FindUserController
+from src.presenters.controllers.find_user_controller import FindUserController
 from src.data.find_user import FindUser
 from src.infra.repo.test import UserRepositorySpy
 from src.presenters.helpers import HttpRequest
@@ -23,7 +23,6 @@ def test_handle_by_user_id_status_code_200():
     """ test handle method using only user id """
     http_request = HttpRequest(query={"user_id": fake_user_id})
     response = find_user_controller.handle(http_request=http_request)
-    print(response)
 
     # Testing output
     assert response.status_code == 200
@@ -35,7 +34,6 @@ def test_handle_by_username_status_code_200():
     """ test handle method using only username """
     http_request = HttpRequest(query={"username": fake_username})
     response = find_user_controller.handle(http_request=http_request)
-    print(response)
 
     # Testing output
     assert response.status_code == 200
@@ -47,7 +45,6 @@ def test_handle_by_user_id_and_username_status_code_200():
     """ test handle method using user ID and username """
     http_request = HttpRequest(query={"user_id": fake_user_id, "username": fake_username})
     response = find_user_controller.handle(http_request=http_request)
-    print(response)
 
     # Testing output
     assert response.status_code == 200
@@ -70,7 +67,6 @@ def test_hadle_status_code_400():
     """ test handle method to check return of status code 400 """
     http_request = HttpRequest()
     response = find_user_controller.handle(http_request=http_request)
-    print(response)
 
     # Testing output
     assert response.status_code == 400

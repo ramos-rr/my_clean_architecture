@@ -7,7 +7,7 @@ from src.presenters.erros import HttpErrors
 class FindUserController:
     """ Class to define controller to find_user usecase """
 
-    def __init__(self, find_user_use_case: Type[FindUser]):
+    def __init__(self, find_user_use_case: [FindUser]):
         self.find_user_use_case = find_user_use_case
 
     def handle(self, http_request: Type[HttpRequest]) -> HttpResponse:
