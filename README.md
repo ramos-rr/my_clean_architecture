@@ -146,6 +146,6 @@ In the end, use case diagram followed as this:<br>
 ## CONTROLLER DIAGRAM
 Remember that this project is becoming wide, thus it's impossible to bring the full diagram picture that is readable.
 For now on, we'll provide only fraction of it.
-<img src="images/use_case_diagram.png" alt="models_and_repository_diagram" width="750" height=""><br>
+<img src="images/controller_diagram.png" alt="controller_diagram" width="550" height=""><br>
 
 
