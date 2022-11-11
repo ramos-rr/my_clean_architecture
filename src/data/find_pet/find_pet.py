@@ -1,4 +1,4 @@
-from typing import Dict, List, Type
+from typing import Dict, List
 from src.domain import Pets
 from src.domain.use_cases import FindPetInterface
 from src.data.interfaces import PetRepositoryInterface as PetRepository
@@ -7,7 +7,7 @@ from src.data.interfaces import PetRepositoryInterface as PetRepository
 class FindPet(FindPetInterface):
     """ Class to manage usecase FindPet """
 
-    def __init__(self, pet_repository: Type[PetRepository]):
+    def __init__(self, pet_repository: [PetRepository]):
         self.pet_repository = pet_repository
 
     def by_pet_id(self, pet_id: int = None) -> Dict[bool, List[Pets] | any]:

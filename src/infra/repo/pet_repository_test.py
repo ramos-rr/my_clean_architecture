@@ -1,5 +1,4 @@
 import pytest
-
 import src.data.register_pet.conftest
 from src.infra.config import CreateDataBase
 from src.infra.errors import InsufficientDataError, NoResultFoundError

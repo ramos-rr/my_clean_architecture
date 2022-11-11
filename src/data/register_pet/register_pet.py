@@ -8,7 +8,7 @@ from src.domain.use_cases import RegisterPetInterface
 
 class RegisterPet(RegisterPetInterface):
 
-    def __init__(self, pet_repository: PetRepository, user_repository: [UserRepository]):
+    def __init__(self, pet_repository: [PetRepository], user_repository: [UserRepository]):
         self.user_repository = user_repository
         self.pet_repository = pet_repository
 

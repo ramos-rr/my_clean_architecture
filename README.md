@@ -140,9 +140,12 @@ database as desired
 - INCLUDE : A small dependency brought by diagram telling that a User must be related to a Pet everytime;<br>
 - BY METHODS : List of required information to perform a database query.<br>
 In the end, use case diagram followed as this:<br>
-<img src="images/use_case_diagram.png" alt="models_and_repository_diagram" width="750" height=""><br>
+<img src="images/use_case_diagram.png" alt="use_case_diagram" width="750" height=""><br>
 <_see it better in `.dia` file_><br>
 
 ## CONTROLLER DIAGRAM
+Remember that this project is becoming wide, thus it's impossible to bring the full diagram picture that is readable.
+For now on, we'll provide only fraction of it.
+<img src="images/controller_diagram.png" alt="controller_diagram" width="550" height=""><br>
 
 
