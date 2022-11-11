@@ -17,20 +17,17 @@ register_user_controller = RegisterUserController(register_user_usecase=register
 
 def test_handle_status_200():
     http_request = HttpRequest(body={"username": fake_username, "password": fake_password})
-    response = register_user_controller.handle(http_request=http_request)
-    print(response)
+    response = register_user_controller.route(http_request=http_request)
     assert response.status_code == 200
 
 
 def test_handle_status_422():
     http_request = HttpRequest(body={"username": fake_username, "password": 'testeabc'})
-    response = register_user_controller.handle(http_request=http_request)
-    print(response)
+    response = register_user_controller.route(http_request=http_request)
     assert response.status_code == 422
 
 
 def test_handle_status_400():
     http_request = HttpRequest()
-    response = register_user_controller.handle(http_request=http_request)
-    print(response)
+    response = register_user_controller.route(http_request=http_request)
     assert response.status_code == 400

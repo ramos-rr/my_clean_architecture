@@ -1,16 +1,17 @@
 from typing import Type
+from src.presenters.interface import RouteInterface
 from src.presenters.erros import HttpErrors
 from src.domain.use_cases import RegisterUserInterface as RegisterUser
 from src.presenters.helpers import HttpRequest, HttpResponse
 
 
-class RegisterUserController:
+class RegisterUserController(RouteInterface):
     """ Class to define controller for register user use case """
 
     def __init__(self, register_user_usecase: Type[RegisterUser]):
         self.register_user_usecase = register_user_usecase
 
-    def handle(self, http_request: Type[HttpRequest]) -> HttpResponse:
+    def route(self, http_request: Type[HttpRequest]) -> HttpResponse:
         """
         Method to call register user use case
         :param http_request: HTTP request body

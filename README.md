@@ -35,7 +35,7 @@ most convenient format needed by outer services.<br>
 #### <b>FRAMEWORK & DRIVERS:</b>
 This outermost layer is where frameworks and tools, such as database and web frameworks, find themselves. It may have 
 little amount of code here, thus it might glue code that communicates with inner circles.<br>
-<b> - Expect frequent changes to this layer.<b><br><br>
+<b> - Expect frequent changes to this layer.</b><br><br>
 
 ## ENTITIES
 ## Relation between classes<br>
@@ -147,5 +147,12 @@ In the end, use case diagram followed as this:<br>
 Remember that this project is becoming wide, thus it's impossible to bring the full diagram picture that is readable.
 For now on, we'll provide only fraction of it.
 <img src="images/controller_diagram.png" alt="controller_diagram" width="550" height=""><br>
+<br>
+
+## EXTERNAL INTERFACES - LAST LAYER<br>
+- For this final layer of development, we have to put all peaces together<br>
+- For user interaction, we'll use FLASK framework</b><br>
+- We'll also implement `DEBUG=True` to help us track down all errors.
+
 
 

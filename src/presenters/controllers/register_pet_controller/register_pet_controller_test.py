@@ -23,7 +23,7 @@ def test_register_pet_controller_handle_status_200():
     http_request = HttpRequest(
         body={"petname": fake_pet_name, "specie": fake_specie, "age": fake_pet_age, "user_id": fake_user_id}
     )
-    response = register_pet_controller.handle(http_request=http_request)
+    response = register_pet_controller.route(http_request=http_request)
     assert response.status_code == 200
 
 
@@ -32,12 +32,12 @@ def test_register_pet_controller_handle_status_422():
     http_request = HttpRequest(
         body={"petname": fake_pet_name, "specie": fake_specie, "age": fake_pet_age, "user_id": fake_user_id + 1}
     )
-    response = register_pet_controller.handle(http_request=http_request)
+    response = register_pet_controller.route(http_request=http_request)
     assert response.status_code == 422
 
 
 def test_register_pet_controller_handle_status_400():
     register_pet_controller = RegisterPetController(register_pet_usecase=register_pet_usecase)
     http_request = HttpRequest()
-    response = register_pet_controller.handle(http_request=http_request)
+    response = register_pet_controller.route(http_request=http_request)
     assert response.status_code == 400
