@@ -1,4 +1,4 @@
-from typing import Dict, Type, List
+from typing import Dict, List
 from src.domain import Users
 from src.domain.use_cases.find_user import FindUserInterface
 from src.data.interfaces import UserRepositoryInterface as UserRepository
@@ -7,7 +7,7 @@ from src.data.interfaces import UserRepositoryInterface as UserRepository
 class FindUser(FindUserInterface):
     """ Class to perform FindUser usecase"""
 
-    def __init__(self, user_repository: Type[UserRepository]):
+    def __init__(self, user_repository: [UserRepository]):
         self.user_repository = user_repository
 
     def by_user_id(self, user_id: int) -> Dict[bool, List[Users]]:

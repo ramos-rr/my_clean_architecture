@@ -1,8 +1,43 @@
  # my_clean_architecture
-Repository based on the Clean Architecture book from Robert C Martin and YouTube classes from "programador Lhama"
+Repository based on the Clean Architecture book from Robert C Martin and YouTube classes from "programador Lhama"<br>
+#### What to expect:
+This course has the objectve to develop a full app to manage USERS and PETS, all the way from a SQL database storage 
+data to the interaction with the exterior. Therefore, we must apply all CLEAN ARCHITECTURE concepts.
 
 ## Check YouTube channel ["Programador Lhama"](https://www.youtube.com/watch?v=YAMgtR3aCuY&list=PLAgbpJQADBGJmTxeRZKWvdJAoJj8_x3si&index=1)
+### Remember that _clean architecture_ basically follow the scheme below:
+<img src="images/clean_architecture.jpg" alt="clean_architecture" width="480" height=""><br>
+Author's explanation of the picture: _"The concentric circles in (above) figure represents areas of software. In general,
+the further in you go, the higher level the software becomes. The outer circles are mechanisms. The inner circles are
+polices."_<br>
+_"Nothing in an inner cicle can know anything at all about something in an outer cicle. In particular, the name of 
+<b>something declared in an outer cicle must not be mentioned by any code in an inner cicle</b>. That includes functions
+, classes, variables, or any other named software entity"_ p.203<br><br>
 
+#### <b>ENTERPRISE BUSINESS RULES:</b>
+Object with method, a set of data structures or function that <b> _can be used_</b>
+by many different application.<br>
+<b> - Expect not to ever change</b>, except some eventual minor ajustments<br><br>
+
+#### <b>APPLICATION BUSINESS RULES (USE CASES):</b>
+Features that orchestrate the flow of data to and from those entities. In general, they do what users want to obtain
+by using the software.<br>
+<b> - Do not expect changes in this layer to affect _entities_</b><br>
+<b> - Also we do not expect the changes in database or UI (dealt by entities) to affect this USE CASE layer.</b><br><br>
+
+#### <b>INTERFACE ADAPTERS:</b>
+Convert datas from use cases language to external and convenient languages, such as WEB agencies (e.g. http request in 
+REST format). Overall, this layer is implemented to transform external data to internal format data, that allow use 
+case and entities to undestand, and then, return to exterior whatever data it has got from inner software within the
+most convenient format needed by outer services.<br>
+<b> - Expect that no code inward of this layer to deal with any database</b><br><br>
+
+#### <b>FRAMEWORK & DRIVERS:</b>
+This outermost layer is where frameworks and tools, such as database and web frameworks, find themselves. It may have 
+little amount of code here, thus it might glue code that communicates with inner circles.<br>
+<b> - Expect frequent changes to this layer.<b><br><br>
+
+## ENTITIES
 ## Relation between classes<br>
 <img src="images/relacao_usuario_pets.png" alt="relationship_classes" width="480" height=""><br>
 - A User takes care of some Pets<br>
@@ -98,10 +133,19 @@ database as desired
 ## THE FULL PICTURE - DEVELPMENT DIAGRAM<br>
 <img src="images/models_and_repository_diagram.png" alt="models_and_repository_diagram" width="650" height=""><br>
 
-## USECASE DIAGRAM
+## USECASE FOR USER AND PET
 <img src="images/usecase_diagram.png" alt="usecase_diagram" width="550" height=""><br>
 - ACTOR: Our user. He can performe all this actions described in the diagram;<br>
 - ACTIONS: Generic descriptions of all possible interaction allowed for this actor;<br>
 - INCLUDE : A small dependency brought by diagram telling that a User must be related to a Pet everytime;<br>
 - BY METHODS : List of required information to perform a database query.<br>
+In the end, use case diagram followed as this:<br>
+<img src="images/use_case_diagram.png" alt="use_case_diagram" width="750" height=""><br>
+<_see it better in `.dia` file_><br>
+
+## CONTROLLER DIAGRAM
+Remember that this project is becoming wide, thus it's impossible to bring the full diagram picture that is readable.
+For now on, we'll provide only fraction of it.
+<img src="images/controller_diagram.png" alt="controller_diagram" width="550" height=""><br>
+
 
