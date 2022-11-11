@@ -18,8 +18,9 @@ class FindUserController:
         """
         response: Dict = {}
 
+        # check if query
         if http_request.query:
-            # check if query
+
             query_string_params = http_request.query.keys()
 
             if "user_id" in query_string_params and "username" in query_string_params:

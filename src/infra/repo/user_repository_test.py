@@ -1,13 +1,9 @@
 import pytest
-# import datetime
-# from src.infra.entities import Users
-# from faker import Faker
-#
-# faker = Faker()
 from src.infra.errors import UserNameNotProvidedError, UserNameTypeError, PasswordNotProvidedError, \
     PasswordWithoutLettersError, PasswordWithoutNumbersError, PasswordTypeError, InsufficientDataError, \
     UserIdNotIntegerError, NoResultFoundError, IntegrityError
 from src.infra.config import CreateDataBase
+
 
 # Check for DB path. If it doesn't exist, system will create one with tables
 CreateDataBase.create_db()
@@ -65,17 +61,6 @@ def test_inset_user_password_type_error(userrepo, username):
 def test_inset_user_password_without_numbers_error(userrepo, username):
     with pytest.raises(PasswordWithoutNumbersError):
         _ = userrepo.insert_user(username=username, password='abcd')
-
-# @pytest.mark.parametrize(
-#     'user_list', [
-#         Users(username=faker.name(), password=f'{faker.random_number(digits=5)}'),
-#         Users(username=faker.name(), password=f'{faker.random_number(digits=5)}'),
-#         Users(username=faker.name(), password=f'{faker.random_number(digits=5)}'),
-#     ]
-# )
-# def test_insert_user_register_time_is_different(userrepo, engine, user_list, db_conn):
-#     db_conn.session.add(user_list)
-#     db_conn.session.commit()
 
 
 # TESTS FOR SELECT USER

@@ -11,6 +11,7 @@ class PetRepository(PetRepositoryInterface):
     """
     Class to manage PET REPOSITORY
     """
+
     @classmethod
     def insert_pet(cls, petname: str, specie: str, age: int, user_id: int) -> Pets:
         """
@@ -39,13 +40,9 @@ class PetRepository(PetRepositoryInterface):
                     register_date=new_pet.register_date
                 )
         except Exception as error:
-            try:
-                error.__getattribute__('code')
-            except:
-                ErrorManager.database_error(error.args)
-            else:
-                ErrorManager.database_error(error.args, error.code)
             db_conn.session.rollback()
+            ErrorManager.database_error(error)
+
         finally:
             db_conn.session.close()
 
@@ -84,13 +81,6 @@ class PetRepository(PetRepositoryInterface):
         except Exception as error:
             db_conn.session.rollback()
             ErrorManager.database_error(error)
-            # try:
-            #     error.__getattribute__('code')
-            # except:
-            #     ErrorManager.database_error(error.args)
-            # else:
-            #     ErrorManager.database_error(error.args, error.code)
-            # db_conn.session.rollback()
 
         finally:
             db_conn.session.close()
