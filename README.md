@@ -152,7 +152,105 @@ For now on, we'll provide only fraction of it.
 ## EXTERNAL INTERFACES - LAST LAYER<br>
 - For this final layer of development, we have to put all peaces together<br>
 - For user interaction, we'll use FLASK framework</b><br>
-- We'll also implement `DEBUG=True` to help us track down all errors.
+- We'll also implement `DEBUG=True` to help us track down all errors.<br>
+<br>
+
+### COMPOSERS<br>
+Inward composers' layer, it is time set up features that connect different layres in order to proper run the 
+software<br>
+<img src="images/project-layers-table.png" alt="project-layers" width="450" height=""><br>
+_See above how this project looks like so far. Now let's connect all pieces together_<br><br>
+
+#### CREATE A COMPOSER<br>
+- Instatiate all part together, like example below:
+```
+from src.presenters.interface import RouteInterface
+from src.presenters.controllers import RegisterUserController
+from src.data.register_user import RegisterUser
+from src.infra.repo import UserRepository
+
+
+def register_user_composer() -> RouteInterface:
+    """
+    Function to compose register user
+    :param: None
+    :return: Object with register user route
+    """
+
+    user_repo = UserRepository()
+    register_user_usecase = RegisterUser(user_repository=user_repo)
+    register_user_route = RegisterUserController(register_user_usecase=register_user_usecase)
+
+    return register_user_route
+    
+```
+<br>
+
+
+
+#### FLASK IT -> `SRC/MAIN/CONFIGS`
+- Start installing FLASK: `$ pipenv install Flask`
+- CREATE `app.py` in src/main/configs
+- IMPORT `from flask import Flask`
+- INSTALL `Flask-Cors`: `pipenv install Flask-Cors` to give some treatments for us.
+- CONFIG APP. Name it whatever you want. It's going to be `app` for this tutorial :<br>
+
+```
+from flask import Flask
+from flask_cors import CORS
+
+app = Flask(__name__)
+CORS(app)
+```
+<br>
+
+- EXPORT `app` in _ _ init _ _
+
+#### ROUTE YOUR COMPOSER<br>
+- Create `api_router.py` in src/main/routes;<br>
+- IMPORT BLUEPRINT -> Flask works basically with BluePrints: `from flask import Blueprint`
+- SET UP a function to return something when called. <b>Don't forget to use a decorator</b> to guid flask
+right in the function. When doing so, insert the METHOD desired. In this case, we'll use GET:
+
+```
+from flask import Blueprint, jsonify
+from src.main.composer import register_user_composite
+
+
+api_routes_bp = Blueprint("api_routes", __name__)
+
+
+@api_routes_bp.route("/api", methods=["GET"])
+def something():
+    """testing"""
+
+    return jsonify({"Programador": "lahma"})
+```
+<br>
+
+- EXPORT `api=routes_bp` blueprint in `__init__`: `from .api_route import api_routes_bp`<br>
+- FINISH CONFIGS:
+  - IMPORT api_routes_bp from src/main/routes: `from src.main.routes import api_routes_bp`
+  - ADD NEW LINE `app.register_blueprint(blueprint=api_routes_bp)`<br>
+  <br>
+
+#### RUN
+- CREATE `run.py` in project's root;
+- IMPORT `app` from src/main/configs: `from src.main.configs import app`
+- CONFIG RUN.PY:<br>
+
+```
+from src.main.configs import app
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8000, debug=False)
+
+```
+<br>
+
+- RUN `$python run.py`
+
+
 
 
 
