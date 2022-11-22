@@ -22,7 +22,7 @@ find_user_controller = FindUserController(find_user_use_case=find_user_use_case)
 def test_handle_by_user_id_status_code_200():
     """ test handle method using only user id """
     http_request = HttpRequest(query={"user_id": fake_user_id})
-    response = find_user_controller.handle(http_request=http_request)
+    response = find_user_controller.route(http_request=http_request)
 
     # Testing output
     assert response.status_code == 200
@@ -33,7 +33,7 @@ def test_handle_by_user_id_status_code_200():
 def test_handle_by_username_status_code_200():
     """ test handle method using only username """
     http_request = HttpRequest(query={"username": fake_username})
-    response = find_user_controller.handle(http_request=http_request)
+    response = find_user_controller.route(http_request=http_request)
 
     # Testing output
     assert response.status_code == 200
@@ -44,7 +44,7 @@ def test_handle_by_username_status_code_200():
 def test_handle_by_user_id_and_username_status_code_200():
     """ test handle method using user ID and username """
     http_request = HttpRequest(query={"user_id": fake_user_id, "username": fake_username})
-    response = find_user_controller.handle(http_request=http_request)
+    response = find_user_controller.route(http_request=http_request)
 
     # Testing output
     assert response.status_code == 200
@@ -56,7 +56,7 @@ def test_handle_by_user_id_and_username_status_code_200():
 def test_hadle_status_code_422():
     """ test handle method to check return of status code 422 """
     http_request = HttpRequest(query={"user_id": fake_user_id + 1, "username": fake_username})
-    response = find_user_controller.handle(http_request=http_request)
+    response = find_user_controller.route(http_request=http_request)
 
     # Testing output
     assert response.status_code == 422
@@ -66,7 +66,7 @@ def test_hadle_status_code_422():
 def test_hadle_status_code_400():
     """ test handle method to check return of status code 400 """
     http_request = HttpRequest()
-    response = find_user_controller.handle(http_request=http_request)
+    response = find_user_controller.route(http_request=http_request)
 
     # Testing output
     assert response.status_code == 400

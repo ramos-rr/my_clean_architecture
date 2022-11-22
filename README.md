@@ -35,7 +35,7 @@ most convenient format needed by outer services.<br>
 #### <b>FRAMEWORK & DRIVERS:</b>
 This outermost layer is where frameworks and tools, such as database and web frameworks, find themselves. It may have 
 little amount of code here, thus it might glue code that communicates with inner circles.<br>
-<b> - Expect frequent changes to this layer.<b><br><br>
+<b> - Expect frequent changes to this layer.</b><br><br>
 
 ## ENTITIES
 ## Relation between classes<br>
@@ -147,5 +147,215 @@ In the end, use case diagram followed as this:<br>
 Remember that this project is becoming wide, thus it's impossible to bring the full diagram picture that is readable.
 For now on, we'll provide only fraction of it.
 <img src="images/controller_diagram.png" alt="controller_diagram" width="550" height=""><br>
+<br>
+
+## EXTERNAL INTERFACES - LAST LAYER<br>
+- For this final layer of development, we have to put all peaces together<br>
+- For user interaction, we'll use FLASK framework</b><br>
+- We'll also implement `DEBUG=True` to help us track down all errors.<br>
+<br>
+
+### COMPOSERS<br>
+Inward composers' layer, it is time set up features that connect different layres in order to proper run the 
+software<br>
+<img src="images/project-layers-table.png" alt="project-layers" width="450" height=""><br>
+_See above how this project looks like so far. Now let's connect all pieces together_<br><br>
+
+#### CREATE A COMPOSER<br>
+- Instatiate all part together, like example below:
+```
+from src.presenters.interface import RouteInterface
+from src.presenters.controllers import RegisterUserController
+from src.data.register_user import RegisterUser
+from src.infra.repo import UserRepository
 
 
+def register_user_composer() -> RouteInterface:
+    """
+    Function to compose register user
+    :param: None
+    :return: Object with register user route
+    """
+
+    user_repo = UserRepository()
+    register_user_usecase = RegisterUser(user_repository=user_repo)
+    register_user_route = RegisterUserController(register_user_usecase=register_user_usecase)
+
+    return register_user_route
+    
+```
+<br>
+
+
+
+#### FLASK IT -> `SRC/MAIN/CONFIGS`
+- Start installing FLASK: `$ pipenv install Flask`. Like all web framework, you must set up an APP to begin with<br>
+- CREATE `app.py` in src/main/configs;<br>
+- IMPORT `from flask import Flask`;<br>
+- INSTALL `Flask-Cors`: `pipenv install Flask-Cors` to give some treatments for us.;<br>.
+- CONFIG APP. Name it whatever you want. It's going to be `app` for this tutorial :<br>
+
+```
+from flask import Flask
+from flask_cors import CORS
+
+app = Flask(__name__)
+CORS(app)
+```
+<br>
+
+- EXPORT `app` in `__init__.py`
+
+#### ROUTE YOUR COMPOSER<br>
+- Create `api_router.py` in src/main/routes;<br>
+- IMPORT BLUEPRINT -> Flask works basically with BluePrints: `from flask import Blueprint`
+- SET UP a function to return something when called. <b>Don't forget to use a decorator</b> to guid flask
+right in the function. When doing so, insert the METHOD desired. In this case, we'll use GET:
+
+```
+from flask import Blueprint, jsonify
+from src.main.composer import register_user_composite
+
+
+api_routes_bp = Blueprint("api_routes", __name__)
+
+
+@api_routes_bp.route("/api", methods=["GET"])
+def something():
+    """testing"""
+
+    return jsonify({"Programador": "lhama"})
+```
+<br>
+
+- EXPORT `api=routes_bp` blueprint in `__init__.py`: `from .api_route import api_routes_bp`<br>
+- FINISH CONFIGS:<br>
+  - IMPORT api_routes_bp from src/main/routes: `from src.main.routes import api_routes_bp`<br>
+  - ADD NEW LINE TO <b>REGISTER YOUR BLUEPRINT IN APP</b>: `app.register_blueprint(blueprint=api_routes_bp)`<br>
+  <br>
+
+#### RUN
+- CREATE `run.py` in project's root;<br>
+- IMPORT `app` from src/main/configs: `from src.main.configs import app`<br>
+- CONFIG RUN.PY:<br>
+
+```
+from src.main.configs import app
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8000, debug=False)
+
+```
+<br>
+
+- RUN `$python run.py`<br>
+
+## FINALLY ONLINE<br>
+- Verify in terminal if FLASK is getting your route: `$ flask routes`:<br>
+<img src="images/flask-routes-info.png" alt="flask-routes-info" width="750" height=""><br>
+<br>
+- Check whether our API is working:<br>
+1. See if the terminal has returned a positive message that you are online locally:<br>
+<img src="images/flask-online-message.png" alt="flask-online-message" width="650" height=""><br>
+2. Go to the browser and type the address showed in terminal. <b> REMEMBER:</b> DON'T FORGET TO FILL REST OF THE URL 
+WITH DE ADDRESS YOU ASSIGNED IN ROUTES. In this case, we have `/api`.<br>
+<img src="images/browser_url_api_address.png" alt="url_route_api" width="200" height=""><br>
+3. Verify in the browser if you get your message (written in api_route) and in the terminal the navegation log:<br>
+<img src="images/first_message_online.png" alt="first_message_online" width="280" height=""><br>
+<br>
+<img src="images/server_log_status_200.png" alt="flask_server_log_status_200" width="600" height=""><br>
+<br>
+
+### TIME SET UP ADAPTERS<br>
+- Adapters will server to call our composer into routes;<br>
+- Adapter parameter will be:<br>
+  - <b>HTTP REQUEST:</b> the BODY, QUERY or HEADER that comes from the BROWSER<br>
+  - <b>ROUTE:</b> the route inward of the back-end that will recieve and return the request as a RESPONSE<br>
+
+```
+from typing import Type
+from src.presenters.interface import RouteInterface as Route
+from src.presenters.helpers import HttpRequest
+
+
+def flask_adapter(request: any, api_route: Type[Route]) -> any:
+    """
+    Adapter patterns to flask
+    :param request: Flask Request
+    :param api_route: Composite route
+    return: Any
+    """
+
+    http_request = HttpRequest(body=request.json)
+    response = api_route.route(http_request=http_request)
+
+    return response
+```
+
+<br>
+
+### UPDATE ROUTE API TO PROCESS RESPONSE<br>
+- Now, it's time to call our adapter in ROUTE to expect a Response from it. For this example, we'll use Register User
+use case<br>
+
+```
+from flask import Blueprint, jsonify, request
+from src.main.composer import register_user_composite
+from src.main.adapter import flask_adapter  # Here we import our adapter
+
+
+api_routes_bp = Blueprint("api_routes", __name__)
+
+
+@api_routes_bp.route("/api/users", methods=["POST"])
+def register_user():
+    """register user route"""
+
+    message = None
+    
+    # Here we call the adapter sending out as parameter the HTTP content we got online
+    response = flask_adapter(request=request, api_route=register_user_composite.register_user_composer())
+    
+    # Check if we have a positive response (with data)
+    if response.status_code < 300:
+        message = {
+            "type": "users",
+            "id": response.body.id,
+            "attributes": {"username": response.body.username,
+                           "register_date": response.body.register_date},
+        }
+    
+    # If we got an error, it's time to show which error is that
+    else:
+        return {
+            "error": response.body["error"],
+            "status": response.status_code,
+            "detail": response.body["detail"].message
+        }
+
+    return jsonify({"data": message}), response.status_code  # STATUS CODE COMES OUTSIDE
+```
+<br>
+
+### REFRESH THE SERVER AND RUN IT AGAIN<br>
+- Wait until flask og online;<br>
+- OPEN Postman, type the url address, as it is described in `api_route.py`. See the decorator:<br>
+`@api_routes_bp.route("/api/users", methods=["POST"])`<br>
+- Create a NEW HEADER in POSTMAN for JSON body be well interpreted, in addition to all other autogenerated headres:<br>
+  - <b>KEY: `Content-Type`</b><br>
+  - <b>VALUE: `application/json`</b><br>
+<img src="images/postman-header-json.png" alt="postman-header-json" width="450" height=""><br>
+
+- Create a BODY in POSTMAN in json format:<br>
+<img src="images/postman-body-register-user.png" alt="postman-body-register-user" width="600" height=""><br>
+<br>
+- <strong>SUBMIT :</strong> CHECK THE RESPONSE BODY AND ITS STATUS:<br>
+<img src="images/postman-register-user-response-200.png" alt="postman-register-user-response-200" width="600" height="">
+<br>
+
+### ERRORS<br>
+All errors, casual or intentional, should be addressed. Let us see how and ERROR might appear:<br>
+<img src="images/postman-register-user-response-422.png" alt="postman-register-user-response-422" width="650" height="">
+<br>
+- Remember that all errors related to DataBase is managed in the infrastructure level!<br>
+- For, back to `api_route.py` and DEBUG your app if you are not getting it

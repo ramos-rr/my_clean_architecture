@@ -1,7 +1,7 @@
 import pytest
 from src.infra.errors import UserNameNotProvidedError, UserNameTypeError, PasswordNotProvidedError, \
     PasswordWithoutLettersError, PasswordWithoutNumbersError, PasswordTypeError, InsufficientDataError, \
-    UserIdNotIntegerError, NoResultFoundError, IntegrityError
+    UserIdNotIntegerError, NoResultFoundError, IntegrityError, PasswordWithSpaceError
 from src.infra.config import CreateDataBase
 
 
@@ -46,6 +46,11 @@ def test_inset_user_name_type_error(userrepo, password):
 def test_inset_user_password_not_provided_error(userrepo, username):
     with pytest.raises(PasswordNotProvidedError):
         _ = userrepo.insert_user(username=username, password=None)
+
+
+def test_inset_user_password_with_space_error(userrepo, username):
+    with pytest.raises(PasswordWithSpaceError):
+        _ = userrepo.insert_user(username=username, password="acb 123")
 
 
 def test_inset_user_password_without_letters_error(userrepo, username):

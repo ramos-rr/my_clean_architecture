@@ -11,6 +11,8 @@ faker = "*"
 pytest-cov = "*"
 flake8 = "*"
 python-decouple = "*"
+flask = "*"
+flask-cors = "*"
 
 [dev-packages]
 
