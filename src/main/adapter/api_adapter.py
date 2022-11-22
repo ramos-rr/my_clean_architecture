@@ -5,7 +5,7 @@ from src.presenters.helpers import HttpRequest
 
 def flask_adapter(request: any, api_route: Type[Route]) -> any:
     """
-    Adapeter patterns to flask
+    Adapter patterns to flask
     :param request: Flask Request
     :param api_route: Composite route
     return: Any

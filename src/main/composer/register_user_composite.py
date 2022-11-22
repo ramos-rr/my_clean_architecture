@@ -14,6 +14,6 @@ def register_user_composer() -> RouteInterface:
 
     user_repo = UserRepository()
     register_user_usecase = RegisterUser(user_repository=user_repo)
-    register_user_route = RegisterUserController(register_user_usecase=register_user_usecase)
+    register_user_router = RegisterUserController(register_user_usecase=register_user_usecase)
 
-    return register_user_route
+    return register_user_router

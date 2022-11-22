@@ -1,6 +1,6 @@
 from src.infra.errors import UserNameNotProvidedError, PasswordNotProvidedError, UserNameTypeError, \
     PasswordWithoutLettersError, PasswordWithoutNumbersError, InsufficientDataError, UserIdNotIntegerError, \
-    PasswordTypeError, DatabaseError, UserIdNotProvidedError, NoResultFoundError, IntegrityError
+    PasswordTypeError, DatabaseError, UserIdNotProvidedError, NoResultFoundError, IntegrityError, PasswordWithSpaceError
 from src.infra.errors.pets_errors import PetNameNotProvidedError, PetNameTypeError, SpecieNotProvidedError,\
     SpecieNotAllowedError, SpecieTypeError, AgeNotIntegerError, PetIdNotIntegerError
 
@@ -86,11 +86,15 @@ class ErrorManager:
             raise PasswordNotProvidedError('You must provide both Name and Password')
         elif isinstance(password, int):
             raise PasswordTypeError('Password must be string. Please verify')
+        elif isinstance(password, bool):
+            raise PasswordTypeError('Password must be string. Please verify')
         else:
             if password.isnumeric():
                 raise PasswordWithoutLettersError('Password invalid. It must have letters to')
             elif password.isalpha():
                 raise PasswordWithoutNumbersError('Password invalid. It must have numbers to')
+            elif " " in password:
+                raise PasswordWithSpaceError('Password invalid. It must not have spaces in his body')
 
     @classmethod
     def __petname_error(cls, petname):

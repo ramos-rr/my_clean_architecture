@@ -23,15 +23,12 @@ class RegisterUserController(RouteInterface):
         # check if body is present
         if http_request.body:
 
-            http_body_keys = http_request.body.keys()
+            username = http_request.body.get("username")
+            password = http_request.body.get("password")
 
-            if ("username" in http_body_keys) and ("password" in http_body_keys):
-                username = http_request.body["username"]
-                password = http_request.body["password"]
+            response = self.register_user_usecase.register(name=username, password=password)
 
-                response = self.register_user_usecase.register(name=username, password=password)
-
-            if not response["success"]:
+            if (response.get("success") is None) or (not response.get("success")):
                 http_error = HttpErrors.error_422(detail=response["detail"])
                 return HttpResponse(status_code=http_error["status_code"], body=http_error["body"])
 

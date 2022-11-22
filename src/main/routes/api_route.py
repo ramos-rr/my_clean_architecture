@@ -12,7 +12,7 @@ def register_user():
 
     message = None
     response = flask_adapter(request=request, api_route=register_user_composite.register_user_composer())
-    if response.status_code == 200:
+    if response.status_code < 300:
         message = {
             "type": "users",
             "id": response.body.id,
@@ -21,10 +21,10 @@ def register_user():
         }
 
     else:
-        message = {
-            "type": response.body["error"],
-            "id": None,
-            "attributes": {"detail": response.body["detail"].message}
-        }
+        return {
+            "error": response.body["error"],
+            "status": response.status_code,
+            "detail": response.body["detail"].message
+        }, response.status_code
 
     return jsonify({"data": message}), response.status_code  # STATUS CODE COMES OUTSIDE
