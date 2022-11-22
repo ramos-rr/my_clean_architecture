@@ -3,7 +3,7 @@ import src.data.register_pet.conftest
 from src.infra.config import CreateDataBase
 from src.infra.errors import InsufficientDataError, NoResultFoundError
 from src.infra.errors.pets_errors import PetNameTypeError, PetNameNotProvidedError, SpecieNotProvidedError, \
-    SpecieNotAllowedError, SpecieTypeError, AgeNotIntegerError, PetIdNotIntegerError
+    SpecieNotAllowedError, SpecieTypeError, AgeNotIntegerError, PetIdNotIntegerError, AgeNotProvidedError
 from src.infra.errors.users_errors.user_id_error import UserIdNotProvidedError, UserIdNotIntegerError
 
 
@@ -57,6 +57,12 @@ def test_insert_pet_specie_type_error(petrepo, petname, age, user_id):
 def test_insert_pet_age_not_integer_error(petrepo, petname, specie, user_id):
     with pytest.raises(AgeNotIntegerError):
         new_pet = petrepo.insert_pet(petname=petname, specie=specie, age='abc', user_id=user_id)
+        return new_pet
+
+
+def test_insert_pet_age_not_provided_error(petrepo, petname, specie, user_id):
+    with pytest.raises(AgeNotProvidedError):
+        new_pet = petrepo.insert_pet(petname=petname, specie=specie, age=None, user_id=user_id)
         return new_pet
 
 

@@ -21,23 +21,23 @@ class RegisterPetController(RouteInterface):
         response = {}
 
         if http_request.body:
-            # if body in http_request
-            body_integrity = http_request.body.keys()
-            if ("petname" in body_integrity) and ("specie" in body_integrity) and ("age" in body_integrity) and \
-                    ("user_id" in body_integrity):
-                petname = http_request.body["petname"]
-                specie = http_request.body["specie"]
-                age = http_request.body["age"]
-                user_id = http_request.body["user_id"]
+            # # if body in http_request
+            # body_integrity = http_request.body.keys()
+            # if ("petname" in body_integrity) and ("specie" in body_integrity) and ("age" in body_integrity) and \
+            #         ("user_id" in body_integrity):
+            petname = http_request.body.get("petname")
+            specie = http_request.body.get("specie")
+            age = http_request.body.get("age")
+            user_id = http_request.body.get("user_id")
 
-                response = self.register_pet_usecase.register(
-                    petname=petname,
-                    specie=specie,
-                    age=age,
-                    user_id=user_id
-                )
-            else:
-                response = {"success": False, "data": None, "detail": 'Could not procede with register pet'}
+            response = self.register_pet_usecase.register(
+                petname=petname,
+                specie=specie,
+                age=age,
+                user_id=user_id
+            )
+            # else:
+            #     response = {"success": False, "data": None, "detail": 'Could not procede with register pet'}
 
             if response["success"] is False:
                 http_error = HttpErrors.error_422(detail=response["detail"])
