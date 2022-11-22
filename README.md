@@ -189,10 +189,10 @@ def register_user_composer() -> RouteInterface:
 
 
 #### FLASK IT -> `SRC/MAIN/CONFIGS`
-- Start installing FLASK: `$ pipenv install Flask`
-- CREATE `app.py` in src/main/configs
-- IMPORT `from flask import Flask`
-- INSTALL `Flask-Cors`: `pipenv install Flask-Cors` to give some treatments for us.
+- Start installing FLASK: `$ pipenv install Flask`. Like all web framework, you must set up an APP to begin with<br>
+- CREATE `app.py` in src/main/configs;<br>
+- IMPORT `from flask import Flask`;<br>
+- INSTALL `Flask-Cors`: `pipenv install Flask-Cors` to give some treatments for us.;<br>.
 - CONFIG APP. Name it whatever you want. It's going to be `app` for this tutorial :<br>
 
 ```
@@ -224,19 +224,19 @@ api_routes_bp = Blueprint("api_routes", __name__)
 def something():
     """testing"""
 
-    return jsonify({"Programador": "lahma"})
+    return jsonify({"Programador": "lhama"})
 ```
 <br>
 
 - EXPORT `api=routes_bp` blueprint in `__init__`: `from .api_route import api_routes_bp`<br>
-- FINISH CONFIGS:
-  - IMPORT api_routes_bp from src/main/routes: `from src.main.routes import api_routes_bp`
-  - ADD NEW LINE `app.register_blueprint(blueprint=api_routes_bp)`<br>
+- FINISH CONFIGS:<br>
+  - IMPORT api_routes_bp from src/main/routes: `from src.main.routes import api_routes_bp`<br>
+  - ADD NEW LINE TO <b>REGISTER YOUR BLUEPRINT IN APP</b>: `app.register_blueprint(blueprint=api_routes_bp)`<br>
   <br>
 
 #### RUN
-- CREATE `run.py` in project's root;
-- IMPORT `app` from src/main/configs: `from src.main.configs import app`
+- CREATE `run.py` in project's root;<br>
+- IMPORT `app` from src/main/configs: `from src.main.configs import app`<br>
 - CONFIG RUN.PY:<br>
 
 ```
@@ -248,9 +248,24 @@ if __name__ == "__main__":
 ```
 <br>
 
-- RUN `$python run.py`
+- RUN `$python run.py`<br>
 
+## FINALLY ONLINE<br>
+- Verify in terminal if FLASK is getting your route: `$ flask routes`:<br>
+<img src="images/flask-routes-info.png" alt="flask-routes-info" width="750" height=""><br>
+<br>
+- Check whether our API is working:<br>
+1. See if the terminal has returned a positive message that you are online locally:<br>
+<img src="images/flask-online-message.png" alt="flask-online-message" width="650" height=""><br>
+2. Go to the browser and type the address showed in terminal. <b> REMEMBER:</b> DON'T FORGET TO FILL REST OF THE URL 
+WITH DE ADDRESS YOU ASSIGNED IN ROUTES. In this case, we have `/api`.<br>
+<img src="images/browser_url_api_address.png" alt="url_route_api" width="200" height=""><br>
+3. Verify in the browser if you get your message (written in api_route) and in the terminal the navegation log:<br>
+<img src="images/first_message_online.png" alt="first_message_online" width="280" height=""><br>
+<br>
+<img src="images/server_log_status_200.png" alt="flask_server_log_status_200" width="600" height=""><br>
+<br>
 
-
-
+### TIME SET UP ADAPTERS
+- Adapters will server to call our composer into routes;
 

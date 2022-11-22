@@ -4,6 +4,7 @@ from src.data.register_user import RegisterUser
 from src.infra.repo import UserRepository
 
 
+# PUT ALL PIECES TOGETHER AND RETURN THE COMPOSER ITSELF
 def register_user_composer() -> RouteInterface:
     """
     Function to compose register user
