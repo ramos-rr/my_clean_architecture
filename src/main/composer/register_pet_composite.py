@@ -1,5 +1,4 @@
 from typing import Type
-
 from src.data.register_pet import RegisterPet
 from src.infra.repo import PetRepository, UserRepository
 from src.presenters.controllers import RegisterPetController

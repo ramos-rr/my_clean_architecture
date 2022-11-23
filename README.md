@@ -2,7 +2,11 @@
 Repository based on the Clean Architecture book from Robert C Martin and YouTube classes from "programador Lhama"<br>
 #### What to expect:
 This course has the objectve to develop a full app to manage USERS and PETS, all the way from a SQL database storage 
-data to the interaction with the exterior. Therefore, we must apply all CLEAN ARCHITECTURE concepts.
+data to the interaction with the exterior. Therefore, we must apply all CLEAN ARCHITECTURE concepts.<br>
+
+#### DON'T FORGET TO CREATE .ENV FILE<br>
+If you are going to fork this repository, do not forget to create a `.env` file in project's root by copying the content
+in `contrib/env-sample` (you can copy, paste and rename it).
 
 ## Check YouTube channel ["Programador Lhama"](https://www.youtube.com/watch?v=YAMgtR3aCuY&list=PLAgbpJQADBGJmTxeRZKWvdJAoJj8_x3si&index=1)
 ### Remember that _clean architecture_ basically follow the scheme below:
@@ -266,7 +270,7 @@ WITH DE ADDRESS YOU ASSIGNED IN ROUTES. In this case, we have `/api`.<br>
 <img src="images/server_log_status_200.png" alt="flask_server_log_status_200" width="600" height=""><br>
 <br>
 
-### TIME SET UP ADAPTERS<br>
+### SET UP ADAPTERS<br>
 - Adapters will server to call our composer into routes;<br>
 - Adapter parameter will be:<br>
   - <b>HTTP REQUEST:</b> the BODY, QUERY or HEADER that comes from the BROWSER<br>
@@ -331,7 +335,7 @@ def register_user():
             "error": response.body["error"],
             "status": response.status_code,
             "detail": response.body["detail"].message
-        }
+        }, response.status_code
 
     return jsonify({"data": message}), response.status_code  # STATUS CODE COMES OUTSIDE
 ```
@@ -358,4 +362,12 @@ All errors, casual or intentional, should be addressed. Let us see how and ERROR
 <img src="images/postman-register-user-response-422.png" alt="postman-register-user-response-422" width="650" height="">
 <br>
 - Remember that all errors related to DataBase is managed in the infrastructure level!<br>
-- For, back to `api_route.py` and DEBUG your app if you are not getting it
+- For, back to `api_route.py` and DEBUG your app if you are not getting it<br>
+
+### FINISHING ALL OTHER COMPOSERS
+- Now, we shall finish the set-up for all others composers to adhere our use case diagram. Remember:<br>
+  - Register User (arlready in place);<br>
+  - Find User;<br>
+  - Register Pet;<br>
+  - Find Pet.<br>
+- For eachone of this, a single composite and a different route is necessary.<br>

@@ -11,7 +11,63 @@ def flask_adapter(request: any, api_route: Type[Route]) -> any:
     return: Any
     """
 
-    http_request = HttpRequest(body=request.json)
+    headers = __get_headers(request=request)
+    body = __get_body(request=request)
+    query = __get_query(request=request)
+
+    http_request = HttpRequest(header=headers, body=body, query=query)
     response = api_route.route(http_request=http_request)
 
     return response
+
+
+def __get_headers(request) -> any:
+    headers = None
+    try:
+        headers = request.headers
+    except:
+        pass
+    return headers
+
+
+def __get_body(request) -> any:
+    body = None
+    try:
+        body = request.json
+    except:
+        pass
+    return body
+
+
+def __get_query(request) -> any:
+    try:
+        query_string = request.args.to_dict()
+    except:
+        try:
+            query_string = request.args
+        except:
+            return {}
+        else:
+            return query_string
+    else:
+        if len(query_string) == 0:
+            return {}
+        else:
+            query = dict()
+
+            if "user_id" in query_string:
+                try:
+                    query["user_id"] = int(query_string.get("user_id"))
+                except:
+                    query["user_id"] = query_string.get("user_id")
+
+            if "pet_id" in query_string:
+                try:
+                    query["pet_id"] = int(query_string.get("pet_id"))
+                except:
+                    query["pet_id"] = query_string.get("pet_id")
+
+            if "username" in query_string:
+                query["username"] = query_string.get("username")
+
+            return query

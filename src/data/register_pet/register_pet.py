@@ -30,7 +30,7 @@ class RegisterPet(RegisterPetInterface):
             except Exception as error:
                 return {"success": False, "detail": error}
         else:
-            response = query_user['detail']
+            response = query_user["detail"]
             return {"success": False, "detail": response}
 
     def __find_user(self, user_id: int):

@@ -1,4 +1,4 @@
-from typing import Type
+from typing import Type, Dict
 from src.presenters.interface import RouteInterface
 from src.domain.use_cases import FindPetInterface as FindPet
 from src.presenters.erros import HttpErrors
@@ -18,26 +18,26 @@ class FindPetController(RouteInterface):
         :return: HTTP Response
         """
 
-        response = {}
+        response: Dict = {}
 
         # check if query exists
         if http_request.query is not None:
 
-            http_query_keys = http_request.query.keys()
+            pet_id = http_request.query.get("pet_id")
+            user_id = http_request.query.get("user_id")
 
             # check which keys there is in query
-            if ("pet_id" in http_query_keys) and ("user_id" not in http_query_keys):
-                pet_id = http_request.query["pet_id"]
+            if pet_id is not None and user_id is not None:
+                response = self.find_pet_usecase.by_pet_id_and_user_id(pet_id=pet_id, user_id=user_id)
+
+            elif pet_id is not None and user_id is None:
                 response = self.find_pet_usecase.by_pet_id(pet_id=pet_id)
 
-            elif ("pet_id" not in http_query_keys) and ("user_id" in http_query_keys):
-                user_id = http_request.query["user_id"]
+            elif user_id is not None and pet_id is None:
                 response = self.find_pet_usecase.by_user_id(user_id=user_id)
 
-            elif ("pet_id" in http_query_keys) and ("user_id" in http_query_keys):
-                pet_id = http_request.query["pet_id"]
-                user_id = http_request.query["user_id"]
-                response = self.find_pet_usecase.by_pet_id_and_user_id(pet_id=pet_id, user_id=user_id)
+            else:
+                response = self.find_pet_usecase.by_pet_id_and_user_id(pet_id=None, user_id=None)
 
             if not response["success"]:
                 http_error = HttpErrors.error_422(detail=response["detail"])

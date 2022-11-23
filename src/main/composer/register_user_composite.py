@@ -1,9 +1,8 @@
 from typing import Type
-
-from src.presenters.interface import RouteInterface
-from src.presenters.controllers import RegisterUserController
 from src.data.register_user import RegisterUser
 from src.infra.repo import UserRepository
+from src.presenters.controllers import RegisterUserController
+from src.presenters.interface import RouteInterface
 
 
 # PUT ALL PIECES TOGETHER AND RETURN THE COMPOSER ITSELF
