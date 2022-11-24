@@ -378,8 +378,8 @@ All errors, casual or intentional, should be addressed. Let us see how and ERROR
 - In order to protect data, wee'll aplly a user validation to give access only for authorized users.<br>
 - Install PyJWT: `$ pipenv install PyJWT`;<br>
 <br>
-- Create a TOKEN route:
-<br>
+- Create a TOKEN route:<br>
+
 ```
 from flask import Blueprint, jsonify, request
 import jwt
@@ -411,9 +411,10 @@ def authorization_route():
 - Launch server and get the token: url=`127.0.0.1:8000/auth`<br>
 <img src="images/jwt-token.png" alt="jwt-token" width="" height=""><br>
 <br>
-#### OBS: JWT'S TOKENS ARE GENERATED AND STORAGED ONLINE. YOU CAN GENERATE AS MANY TOKENS AS YOU WANT BECAUSE THEY WILL EXPIRE ACCORDING TO YOUR SET UP.
-- Create a secret route to test token:
+<strong>JWT'S TOKENS ARE GENERATED AND STORAGED ONLINE. YOU CAN GENERATE AS MANY TOKENS AS YOU WANT BECAUSE THEY WILL EXPIRE ACCORDING TO YOUR SET UP.</strong><br>
 <br>
+- Create a secret route to test token:<br>
+
 ```
 @api_routes_bp.route("/secret", methods=["GET"])
 def secret_route():
