@@ -379,7 +379,7 @@ All errors, casual or intentional, should be addressed. Let us see how and ERROR
 - Install PyJWT: `$ pipenv install PyJWT`;<br>
 <br>
 - Create a TOKEN route:
--<br>
+<br>
 ```
 from flask import Blueprint, jsonify, request
 import jwt
@@ -465,6 +465,7 @@ def secret_route():
   as expiration time. Need to enter the very same values from the token generation above;<br>
   - `exceptions` = Treat each exception according to their occurrence. Let's have these two for now;<br>
 <br>
+
 - RUN Server and try to get a 200 status code:
 <img src="images/jwt-authorization-200.png" alt="jwt-authorization_200" width="" height=""><br>
 - TRY ERRORS:<br>
