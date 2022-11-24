@@ -406,9 +406,9 @@ def authorization_route():
 - Parameters used:<br>
   - <b>"exp"</b> = Token expiration time. In this case, we've used 20 minutes;<br>
   - <b>key</b> = Secret key to decode it later;<br>
-  - <b>algorithm</b> = Type of algorith that allow adm to track which User used it. To kwon more, check [onilne](https://stackoverflow.com/questions/39239051/rs256-vs-hs256-whats-the-difference);<br>
+  - <b>algorithm</b> = Type of algorith that allow adm to track which User used it. To kwon more, check [online](https://stackoverflow.com/questions/39239051/rs256-vs-hs256-whats-the-difference);<br>
 <br>
-- Launch server and get the token: url=`127.0.0.1:8000/auth`<br>
+- Launch server and get the token: url = `127.0.0.1:8000/auth`<br>
 <img src="images/jwt-token.png" alt="jwt-token" width="" height=""><br>
 <br>
 <strong>JWT'S TOKENS ARE GENERATED AND STORAGED ONLINE. YOU CAN GENERATE AS MANY TOKENS AS YOU WANT BECAUSE THEY WILL EXPIRE ACCORDING TO YOUR SET UP.</strong><br>
