@@ -3,10 +3,11 @@ Repository based on the Clean Architecture book from Robert C Martin and YouTube
 #### What to expect:
 This course has the objectve to develop a full app to manage USERS and PETS, all the way from a SQL database storage 
 data to the interaction with the exterior. Therefore, we must apply all CLEAN ARCHITECTURE concepts.<br>
-
-#### DON'T FORGET TO CREATE .ENV FILE<br>
-If you are going to fork this repository, do not forget to create a `.env` file in project's root by copying the content
-in `contrib/env-sample` (you can copy, paste and rename it).
+<br>
+#### DON'T FORGET TO SET UP THE VISTUAL ENVIRONMENT AND CREATE .ENV FILE !<br>
+- Use PIPENV to 
+- If you are going to fork this repository, do not forget to create a `.env` file in project's root by copying the 
+content in `contrib/env-sample` (you can copy, paste and rename it).
 
 ## Check YouTube channel ["Programador Lhama"](https://www.youtube.com/watch?v=YAMgtR3aCuY&list=PLAgbpJQADBGJmTxeRZKWvdJAoJj8_x3si&index=1)
 ### Remember that _clean architecture_ basically follow the scheme below:
@@ -371,3 +372,105 @@ All errors, casual or intentional, should be addressed. Let us see how and ERROR
   - Register Pet;<br>
   - Find Pet.<br>
 - For eachone of this, a single composite and a different route is necessary.<br>
+<br>
+
+## USER VALIDATION - PyJWT<br>
+- In order to protect data, wee'll aplly a user validation to give access only for authorized users.<br>
+- Install PyJWT: `$ pipenv install PyJWT`;<br>
+<br>
+- Create a TOKEN route:
+-<br>
+```
+from flask import Blueprint, jsonify, request
+import jwt
+from datetime import datetime, timedelta
+
+@api_routes_bp.route('/auth', methods=["POST"])
+def authorization_route():
+
+    token = jwt.encode(
+        {
+            "exp": datetime.utcnow() + timedelta(minutes=20)
+        },
+        key='1234',
+        algorithm="HS256"
+    )
+    return jsonify(
+        {
+            "token": token
+        }
+    ), 200
+```
+<br>
+
+- Parameters used:<br>
+  - <b>"exp"</b> = Token expiration time. In this case, we've used 20 minutes;<br>
+  - <b>key</b> = Secret key to decode it later;<br>
+  - <b>algorithm</b> = Type of algorith that allow adm to track which User used it. To kwon more, check [onilne](https://stackoverflow.com/questions/39239051/rs256-vs-hs256-whats-the-difference);<br>
+<br>
+- Launch server and get the token: url=`127.0.0.1:8000/auth`<br>
+<img src="images/jwt-token.png" alt="jwt-token" width="" height=""><br>
+<br>
+#### OBS: JWT'S TOKENS ARE GENERATED AND STORAGED ONLINE. YOU CAN GENERATE AS MANY TOKENS AS YOU WANT BECAUSE THEY WILL EXPIRE ACCORDING TO YOUR SET UP.
+- Create a secret route to test token:
+<br>
+```
+@api_routes_bp.route("/secret", methods=["GET"])
+def secret_route():
+
+    raw_token = request.headers.get("Authorization")
+
+    if not raw_token:
+        return jsonify(
+            {
+                "error": "Not allowed"
+            }
+        ), 401
+        
+    try:
+        if raw_token.count(" ") == 1:
+            token = raw_token.split()[1]
+        else:
+            token = raw_token
+
+        token_info = jwt.decode(token, key="1234", algorithms="HS256")
+
+    except jwt.ExpiredSignatureError:
+        return jsonify(
+            {
+                "error": "Token expired"
+            }
+        ), 401
+    except jwt.InvalidTokenError:
+        return jsonify(
+                {
+                    "error": "Invalid token"
+                }
+            ), 401
+    else:
+        return jsonify(
+            {
+                "data": "secret message",
+                "token_expiration": token_info["exp"]
+            }
+        ), 200
+```
+<br>
+
+- Parameters used:
+  - `raw_token = request.headers.get("Authorization")` = Go to headers and check if any token has been provided;<br>
+  - `if not raw_token` = If no "Authorization" headers exists, than the response will be an error;<br>
+  - `if raw_token.count(" ") == 1:` = In case raw token comes with a SPACE character, we split it to get onlu raw token;<br>
+  - `token_info = jwt.decode(token, key="1234", algorithms="HS256")` = To decode the token and get its information, such
+  as expiration time. Need to enter the very same values from the token generation above;<br>
+  - `exceptions` = Treat each exception according to their occurrence. Let's have these two for now;<br>
+<br>
+- RUN Server and try to get a 200 status code:
+<img src="images/jwt-authorization-200.png" alt="jwt-authorization_200" width="" height=""><br>
+- TRY ERRORS:<br>
+  - Tokenless<br>
+  <img src="images/jwt-authorization-no-token.png" alt="jwt-authorization-no-token" width="" height=""><br>
+  - Wrong token<br>
+  <img src="images/jwt-authorization-invalid-token.png" alt="jwt-authorization-invalid-token" width="" height=""><br>
+  - Expired token (set "exp" to 1 seconds, generate another token and use here)<br>
+  <img src="images/jwt-authorization-token-expired.png" alt="jwt-authorization-token-expired" width="" height=""><br>
