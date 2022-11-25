@@ -477,7 +477,9 @@ def secret_route():
   - Expired token (set "exp" to 1 seconds, generate another token and use here)<br>
   <img src="images/jwt-authorization-token-expired.png" alt="jwt-authorization-token-expired" width="" height=""><br>
 <br>
+
 ## FINAL SET UP<br>
+
 ### PUT A DECORATOR IN PLACE<br>
 - Now, it is time to put this authorization as a decorator to be called before ROUTE process its program;<br>
 - CREATE a new package folder: `/src/main/auth_jwt`;<br>
