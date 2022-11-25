@@ -1,0 +1,76 @@
+import time
+from functools import wraps
+from flask import request, jsonify
+import jwt
+from .token_handler import token_generator
+
+
+def token_verify(function: callable) -> callable:
+
+    # Use WRAPS to send out all contend from within internal function
+    @wraps(function)
+    def decorated(*args, **kwargs):
+
+        raw_token = request.headers.get("Authorization")
+        uid = request.headers.get("uid")
+
+        if not raw_token or not uid:
+            return jsonify(
+                {
+                    "error": "Not allowed. Must inform a user_id"
+                }), 401
+
+        try:
+            if raw_token.count(" ") == 1:
+                token = raw_token.split()[1]
+            else:
+                token = raw_token
+
+            token_info = jwt.decode(token, key="1234", algorithms="HS256")
+            token_exp = f'{(token_info["exp"] - time.time()) / 60:.2f}'
+            key_uid = token_info["uid"]
+
+        except jwt.ExpiredSignatureError:
+            return jsonify(
+                {
+                    "error": "Token expired"
+                }
+            ), 401
+        except jwt.InvalidTokenError:
+            return jsonify(
+                {
+                    "error": "Invalid token"
+                }
+            ), 401
+        except KeyError:
+            return jsonify(
+                {
+                    "error": "Invalid token. No user_id designed in token generation"
+                }
+            ), 401
+
+        else:
+            if not isinstance(uid, int):
+                try:
+                    uid = int(uid)
+                except:
+                    return jsonify(
+                        {
+                            "error": "user_id must be numbers only"
+                        }
+                    ), 400
+
+            if uid != key_uid:
+                return jsonify(
+                    {
+                        "error": "User not allowed"
+                    }
+                ), 401
+
+            next_token = token_generator.refresh(token)
+
+            print(next_token)
+
+            return function(next_token, token_exp, *args, **kwargs)
+
+    return decorated
