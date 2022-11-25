@@ -1,8 +1,8 @@
 from src.infra.errors import UserNameNotProvidedError, PasswordNotProvidedError, UserNameTypeError, \
     PasswordWithoutLettersError, PasswordWithoutNumbersError, InsufficientDataError, UserIdNotIntegerError, \
     PasswordTypeError, DatabaseError, UserIdNotProvidedError, NoResultFoundError, IntegrityError, PasswordWithSpaceError
-from src.infra.errors.pets_errors import PetNameNotProvidedError, PetNameTypeError, SpecieNotProvidedError,\
-    SpecieNotAllowedError, SpecieTypeError, AgeNotIntegerError, PetIdNotIntegerError
+from src.infra.errors.pets_errors import PetNameNotProvidedError, PetNameTypeError, SpecieNotProvidedError, \
+    SpecieNotAllowedError, SpecieTypeError, AgeNotIntegerError, PetIdNotIntegerError, AgeNotProvidedError
 
 
 class ErrorManager:
@@ -116,7 +116,9 @@ class ErrorManager:
 
     @classmethod
     def __age_error(cls, age):
-        if not isinstance(age, int):
+        if age is None:
+            raise AgeNotProvidedError(message='An age must be provided. Please, try again')
+        elif not isinstance(age, int):
             raise AgeNotIntegerError(message='Age must be integer. Please check')
 
     @classmethod

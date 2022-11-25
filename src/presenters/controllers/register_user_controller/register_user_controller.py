@@ -1,4 +1,6 @@
 from typing import Type
+
+from src.infra.errors import InsufficientDataError
 from src.presenters.interface import RouteInterface
 from src.presenters.erros import HttpErrors
 from src.domain.use_cases import RegisterUserInterface as RegisterUser
@@ -35,5 +37,6 @@ class RegisterUserController(RouteInterface):
             return HttpResponse(status_code=200, body=response["data"])
 
         else:
-            http_error = HttpErrors.error_400()
+            http_error = HttpErrors.error_400(detail=InsufficientDataError('No body has been requested! Please '
+                                                                           'check if parameters are correctly written'))
             return HttpResponse(status_code=http_error["status_code"], body=http_error["body"])

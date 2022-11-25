@@ -1,10 +1,15 @@
+from typing import Type
 from src.data.find_user import FindUser
 from src.infra.repo import UserRepository
-from src.presenters.interface import RouteInterface
 from src.presenters.controllers import FindUserController
+from src.presenters.interface import RouteInterface
 
 
-def find_user_composer() -> RouteInterface:
+def find_user_composer() -> Type[RouteInterface]:
+    """
+    Function to instantiate all modules for find user use case
+    :return: Route HTTP REQUEST
+    """
 
     user_repo = UserRepository()
     find_user_usecase = FindUser(user_repository=user_repo)

@@ -1,4 +1,6 @@
 from typing import Type, Dict
+
+from src.infra.errors import InsufficientDataError
 from src.presenters.interface import RouteInterface
 from src.presenters.helpers import HttpRequest, HttpResponse
 from src.domain.use_cases.find_user import FindUserInterface as FindUser
@@ -20,25 +22,22 @@ class FindUserController(RouteInterface):
         response: Dict = {}
 
         # check if query
-        if http_request.query:
+        if http_request.query is not None:
 
-            query_string_params = http_request.query.keys()
+            username = http_request.query.get("username")
+            user_id = http_request.query.get("user_id")
 
-            if "user_id" in query_string_params and "username" in query_string_params:
-                user_id = http_request.query["user_id"]
-                username = http_request.query["username"]
+            if username is not None and user_id is not None:
                 response = self.find_user_use_case.by_user_id_and_username(user_id=user_id, username=username)
 
-            elif "user_id" in query_string_params and "username" not in query_string_params:
-                user_id = http_request.query["user_id"]
+            elif user_id is not None and username is None:
                 response = self.find_user_use_case.by_user_id(user_id=user_id)
 
-            elif "user_id" not in query_string_params and "username" in query_string_params:
-                username = http_request.query["username"]
+            elif username is not None and user_id is None:
                 response = self.find_user_use_case.by_username(username=username)
 
             else:
-                response = {"success": False, "data": None}
+                response = self.find_user_use_case.by_username(username=username)
 
             if response["success"] is False:
                 http_error = HttpErrors.error_422(detail=response['detail'])
@@ -50,7 +49,8 @@ class FindUserController(RouteInterface):
             return HttpResponse(status_code=200, body=response["data"])
 
         else:
-            http_error = HttpErrors.error_400()
+            http_error = HttpErrors.error_400(detail=InsufficientDataError('No query has been requested! Please '
+                                                                           'check if parameters are correctly written'))
             return HttpResponse(
                 status_code=http_error["status_code"],
                 body=http_error["body"]

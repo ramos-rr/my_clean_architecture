@@ -2,7 +2,12 @@
 Repository based on the Clean Architecture book from Robert C Martin and YouTube classes from "programador Lhama"<br>
 #### What to expect:
 This course has the objectve to develop a full app to manage USERS and PETS, all the way from a SQL database storage 
-data to the interaction with the exterior. Therefore, we must apply all CLEAN ARCHITECTURE concepts.
+data to the interaction with the exterior. Therefore, we must apply all CLEAN ARCHITECTURE concepts.<br>
+<br>
+#### DON'T FORGET TO SET UP THE VISTUAL ENVIRONMENT AND CREATE .ENV FILE !<br>
+- Use PIPENV to 
+- If you are going to fork this repository, do not forget to create a `.env` file in project's root by copying the 
+content in `contrib/env-sample` (you can copy, paste and rename it).
 
 ## Check YouTube channel ["Programador Lhama"](https://www.youtube.com/watch?v=YAMgtR3aCuY&list=PLAgbpJQADBGJmTxeRZKWvdJAoJj8_x3si&index=1)
 ### Remember that _clean architecture_ basically follow the scheme below:
@@ -266,7 +271,7 @@ WITH DE ADDRESS YOU ASSIGNED IN ROUTES. In this case, we have `/api`.<br>
 <img src="images/server_log_status_200.png" alt="flask_server_log_status_200" width="600" height=""><br>
 <br>
 
-### TIME SET UP ADAPTERS<br>
+### SET UP ADAPTERS<br>
 - Adapters will server to call our composer into routes;<br>
 - Adapter parameter will be:<br>
   - <b>HTTP REQUEST:</b> the BODY, QUERY or HEADER that comes from the BROWSER<br>
@@ -331,7 +336,7 @@ def register_user():
             "error": response.body["error"],
             "status": response.status_code,
             "detail": response.body["detail"].message
-        }
+        }, response.status_code
 
     return jsonify({"data": message}), response.status_code  # STATUS CODE COMES OUTSIDE
 ```
@@ -358,4 +363,327 @@ All errors, casual or intentional, should be addressed. Let us see how and ERROR
 <img src="images/postman-register-user-response-422.png" alt="postman-register-user-response-422" width="650" height="">
 <br>
 - Remember that all errors related to DataBase is managed in the infrastructure level!<br>
-- For, back to `api_route.py` and DEBUG your app if you are not getting it
+- For, back to `api_route.py` and DEBUG your app if you are not getting it<br>
+
+### FINISHING ALL OTHER COMPOSERS
+- Now, we shall finish the set-up for all others composers to adhere our use case diagram. Remember:<br>
+  - Register User (arlready in place);<br>
+  - Find User;<br>
+  - Register Pet;<br>
+  - Find Pet.<br>
+- For eachone of this, a single composite and a different route is necessary.<br>
+<br>
+
+## USER VALIDATION - PyJWT<br>
+- In order to protect data, wee'll aplly a user validation to give access only for authorized users.<br>
+- Install PyJWT: `$ pipenv install PyJWT`;<br>
+<br>
+- Create a TOKEN route:<br>
+
+```
+from flask import Blueprint, jsonify, request
+import jwt
+from datetime import datetime, timedelta
+
+@api_routes_bp.route('/auth', methods=["POST"])
+def authorization_route():
+
+    token = jwt.encode(
+        {
+            "exp": datetime.utcnow() + timedelta(minutes=20)
+        },
+        key='1234',
+        algorithm="HS256"
+    )
+    return jsonify(
+        {
+            "token": token
+        }
+    ), 200
+```
+<br>
+
+- Parameters used:<br>
+  - <b>"exp"</b> = Token expiration time. In this case, we've used 20 minutes;<br>
+  - <b>key</b> = Secret key to decode it later;<br>
+  - <b>algorithm</b> = Type of algorith that allow adm to track which User used it. To kwon more, check [online](https://stackoverflow.com/questions/39239051/rs256-vs-hs256-whats-the-difference);<br>
+<br>
+- Launch server and get the token: url = `127.0.0.1:8000/auth`<br>
+<img src="images/jwt-token.png" alt="jwt-token" width="" height=""><br>
+<br>
+<strong>JWT'S TOKENS ARE GENERATED AND STORAGED ONLINE. YOU CAN GENERATE AS MANY TOKENS AS YOU WANT BECAUSE THEY WILL EXPIRE ACCORDING TO YOUR SET UP.</strong><br>
+<br>
+- Create a secret route to test token:<br>
+
+```
+@api_routes_bp.route("/secret", methods=["GET"])
+def secret_route():
+
+    raw_token = request.headers.get("Authorization")
+
+    if not raw_token:
+        return jsonify(
+            {
+                "error": "Not allowed"
+            }
+        ), 401
+        
+    try:
+        if raw_token.count(" ") == 1:
+            token = raw_token.split()[1]
+        else:
+            token = raw_token
+
+        token_info = jwt.decode(token, key="1234", algorithms="HS256")
+
+    except jwt.ExpiredSignatureError:
+        return jsonify(
+            {
+                "error": "Token expired"
+            }
+        ), 401
+    except jwt.InvalidTokenError:
+        return jsonify(
+                {
+                    "error": "Invalid token"
+                }
+            ), 401
+    else:
+        return jsonify(
+            {
+                "data": "secret message",
+                "token_expiration": token_info["exp"]
+            }
+        ), 200
+```
+<br>
+
+- Parameters used:
+  - `raw_token = request.headers.get("Authorization")` = Go to headers and check if any token has been provided;<br>
+  - `if not raw_token` = If no "Authorization" headers exists, than the response will be an error;<br>
+  - `if raw_token.count(" ") == 1:` = In case raw token comes with a SPACE character, we split it to get onlu raw token;<br>
+  - `token_info = jwt.decode(token, key="1234", algorithms="HS256")` = To decode the token and get its information, such
+  as expiration time. Need to enter the very same values from the token generation above;<br>
+  - `exceptions` = Treat each exception according to their occurrence. Let's have these two for now;<br>
+<br>
+
+- RUN Server and try to get a 200 status code:
+<img src="images/jwt-authorization-200.png" alt="jwt-authorization_200" width="" height=""><br>
+- TRY ERRORS:<br>
+  - Tokenless<br>
+  <img src="images/jwt-authorization-no-token.png" alt="jwt-authorization-no-token" width="" height=""><br>
+  - Wrong token<br>
+  <img src="images/jwt-authorization-invalid-token.png" alt="jwt-authorization-invalid-token" width="" height=""><br>
+  - Expired token (set "exp" to 1 seconds, generate another token and use here)<br>
+  <img src="images/jwt-authorization-token-expired.png" alt="jwt-authorization-token-expired" width="" height=""><br>
+<br>
+## FINAL SET UP<br>
+### PUT A DECORATOR IN PLACE<br>
+- Now, it is time to put this authorization as a decorator to be called before ROUTE process its program;<br>
+- CREATE a new package folder: `/src/main/auth_jwt`;<br>
+- CREATE a new package folder: `/src/main/auth_jwt/token_handler`;<br>
+- CREATE a new file: `token_generator.py`;<br>
+- Set UP a new TokenGenerator class:<br>
+  - Attributes: token_key, expiration_time, refresh_time;<br>
+  - Public Methods: generate_toke(param: user_id), refresh_token(param: token)<br>
+  - Private Methods: encode_token(param: user_id)<br><br>
+
+- CREATE a new file: `token_sigleton.py` to make sure that no more than ONE token generator is instantiated in the same
+session:<br>
+
+```
+from decouple import config
+from .token_generator import TokenGenerator
+token_generator = TokenGenerator(
+    token_key=config("TOKEN_KEY"),
+    exp_time_min=config("TOKEN_EXPIRATION_MIN", cast=int),
+    refresh_time_min=config("TOKEN_REFRESH_MIN", cast=int)
+)
+```
+<br>
+
+<b>Don't forget to export only this variable outside</b> in `/src/main/auth_jwt/token_handler__init__.py`. This way, 
+no body will have access to token generator;<br>
+- Back to `/src/main/auth_jwt`, create a new file `token_verifier.py`;<br><br>
+
+- <b>NOW, TIME TO SET UP DECORATOR;</b><br>
+  - CREATE a callable function: `def token_verify(function: callable) -> callable:`
+  - Insede this function, create another function and name it _decorated()_: `def decorated(*args, **kwargs):`;<br>
+    - <b>*args:</b> Obligatory parameter when creating a decorator that inherits the class who has called it;<br>
+    - <b>*kwargs:</b> Obligatory parameter when creating a decorator that inherits the class who has called it;<br>
+  - Let's cut and copy all lines from code `/secret` inside `api_route.py` that we have just created;<br>
+```
+import time
+from functools import wraps
+from flask import request, jsonify
+import jwt
+from .token_handler import token_generator
+
+
+def token_verify(function: callable) -> callable:
+
+    # Use WRAPS to send out all contend from within internal function
+    @wraps(function)
+    def decorated(*args, **kwargs):
+
+        raw_token = request.headers.get("Authorization")
+        uid = request.headers.get("uid")
+
+        if not raw_token or not uid:
+            return jsonify(
+                {
+                    "error": "Not allowed. Must inform a user_id"
+                }), 401
+
+        try:
+            if raw_token.count(" ") == 1:
+                token = raw_token.split()[1]
+            else:
+                token = raw_token
+
+            token_info = jwt.decode(token, key="1234", algorithms="HS256")
+            token_exp = f'{(token_info["exp"] - time.time()) / 60:.2f}'
+            key_uid = token_info["uid"]
+
+        except jwt.ExpiredSignatureError:
+            return jsonify(
+                {
+                    "error": "Token expired"
+                }
+            ), 401
+        except jwt.InvalidTokenError:
+            return jsonify(
+                {
+                    "error": "Invalid token"
+                }
+            ), 401
+        except KeyError:
+            return jsonify(
+                {
+                    "error": "Invalid token. No user_id designed in token generation"
+                }
+            ), 401
+
+        else:
+            if not isinstance(uid, int):
+                try:
+                    uid = int(uid)
+                except:
+                    return jsonify(
+                        {
+                            "error": "user_id must be numbers only"
+                        }
+                    ), 400
+
+            if uid != key_uid:
+                return jsonify(
+                    {
+                        "error": "User not allowed"
+                    }
+                ), 401
+
+            next_token = token_generator.refresh(token)
+
+            print(next_token)
+
+            return function(next_token, token_exp, *args, **kwargs)
+
+    return decorated
+```
+<br>
+
+- EXPORT this function and the singleton variable in `/scr/main/auth_jwt/__init__.py` (do not export TokenGenerator):<br>
+```
+<file:/scr/main/auth_jwt/__init__.py>
+
+from .token_handler import token_generator
+from .token_verifier import token_verify
+```
+<br>
+
+- GO BACK in route, finish the configutation by puting the decorator just created to tell python to perfomr 
+authorization check before process inside the route. (Remember that the vast majority of the old code were cut and 
+copied into the decorator):
+```
+from flask import Blueprint, jsonify
+from ..auth_jwt import token_generator, token_verify
+
+@api_routes_bp.route("/secret", methods=["GET"])
+@token_verify
+def secret_route(token, exp):
+
+    return jsonify(
+        {
+            "data": {
+                "token_info": {
+                    "token": token,
+                    "exp": exp
+                }
+            }
+        }
+    ), 200
+```
+<br>
+
+- AJUST `/auth` route to generate a token using those new features:<br>
+```
+@api_routes_bp.route('/auth', methods=["POST"])
+def authorization_route():
+
+    token = token_generator.generate(uid=10)
+    
+    print(token)
+    return jsonify(
+        {
+            "token": token
+        }
+    ), 200
+```
+<br>
+
+### TEST<br>
+Launch the server and run the tests:<br>
+1. GENERATE A NEW TOKEN FIRST:<br>
+  <img src="images/jwt-token-generator-200.png" alt="jwt-token-generator-200" width="" height=""><br>
+2. TRY TO GET A 200 RESPONSE USING THE AUTHORIZATION AND THE USER_ID AS HEADERS:<br>
+   <img src="images/jwt-authorization-200-2.png" alt="jwt-auhtorization-200-2" width="" height=""><br>
+3. PLAY WITH ERRORS - You should get the same erros as tested before<br>
+<br>
+
+### APPLY AUTHORIZATION DECORATOR FOR ALL ROUTES<br>
+
+Time to finish this project and get everything working. Let's mark with de `@token_verify` decorator on top of our other
+routes:<br>
+
+```
+@api_routes_bp.route("/api/users", methods=["POST"])
+@token_verify
+def register_user(token, exp):
+    """register user route"""
+    ...
+    
+    
+@api_routes_bp.route("/api/pets", methods=["POST"])
+@token_verify
+def register_pet(token, exp):
+    """register pet route"""
+    ...
+
+
+@api_routes_bp.route("/api/users", methods=["GET"])
+@token_verify
+def find_user(token, exp):
+    """find user route"""
+
+
+@api_routes_bp.route("/api/pets", methods=["GET"])
+@token_verify
+def find_pet(token, exp):
+    """find pet route"""
+    ...
+    
+```
+<br>
+
+<strong>This way, everything should be working fine!</strong><br>
+Tanks =D
