@@ -371,11 +371,11 @@ All errors, casual or intentional, should be addressed. Let us see how and ERROR
   - Find User;<br>
   - Register Pet;<br>
   - Find Pet.<br>
-- For eachone of this, a single composite and a different route is necessary.<br>
+- For each one of this, a single composite and a different route is necessary.<br>
 <br>
 
 ## USER VALIDATION - PyJWT<br>
-- In order to protect data, wee'll aplly a user validation to give access only for authorized users.<br>
+- In order to protect data, we'll aplly a user validation to give access only for authorized users.<br>
 - Install PyJWT: `$ pipenv install PyJWT`;<br>
 <br>
 - Create a TOKEN route:<br>
