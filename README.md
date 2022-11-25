@@ -649,9 +649,12 @@ Launch the server and run the tests:<br>
    <img src="images/jwt-authorization-200-2.png" alt="jwt-auhtorization-200-2" width="" height=""><br>
 3. PLAY WITH ERRORS - You should get the same erros as tested before<br>
 <br>
-## APPLY AUTHORIZATION DECORATOR FOR ALL ROUTES<br>
+
+### APPLY AUTHORIZATION DECORATOR FOR ALL ROUTES<br>
+
 Time to finish this project and get everything working. Let's mark with de `@token_verify` decorator on top of our other
 routes:<br>
+
 ```
 @api_routes_bp.route("/api/users", methods=["POST"])
 @token_verify
@@ -678,6 +681,7 @@ def find_user(token, exp):
 def find_pet(token, exp):
     """find pet route"""
     ...
+    
 ```
 <br>
 
