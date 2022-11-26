@@ -29,7 +29,8 @@ def test_flask_adapter_with_find_user_controller_status_200():
     http_query = request_mock(args={"user_id": 999, "username": 'Adapter Test'})
 
     user_repo = UserRepositorySpy(user_id=999, usename='Adapter Test')
-    find_user_usecase = FindUser(user_repository=user_repo)
+    pet_repo = PetRepositorySpy()
+    find_user_usecase = FindUser(user_repository=user_repo, pet_repository=pet_repo)
     router = FindUserController(find_user_use_case=find_user_usecase)
     fa = flask_adapter(request=http_query, api_route=router)
     assert fa.status_code == 200

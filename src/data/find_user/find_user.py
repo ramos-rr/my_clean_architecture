@@ -1,14 +1,16 @@
-from typing import Dict, List
+from typing import Dict, List, Type
 from src.domain import Users
 from src.domain.use_cases.find_user import FindUserInterface
 from src.data.interfaces import UserRepositoryInterface as UserRepository
+from src.data.interfaces import PetRepositoryInterface as PetRepository
 
 
 class FindUser(FindUserInterface):
     """ Class to perform FindUser usecase"""
 
-    def __init__(self, user_repository: [UserRepository]):
+    def __init__(self, user_repository: Type[UserRepository], pet_repository: Type[PetRepository]):
         self.user_repository = user_repository
+        self.pet_repository = pet_repository
 
     def by_user_id(self, user_id: int) -> Dict[bool, List[Users]]:
         """
@@ -19,6 +21,8 @@ class FindUser(FindUserInterface):
         response = None
         try:
             response = self.user_repository.select_user(user_id=user_id)
+            pet = self.__get_pet(response)
+            response.append(pet)
             return {"success": True, "data": response}
         except Exception as error:
             return {"success": False, "detail": error}
@@ -32,6 +36,8 @@ class FindUser(FindUserInterface):
         response = None
         try:
             response = self.user_repository.select_user(username=username)
+            pet = self.__get_pet(response)
+            response.append(pet)
             return {"success": True, "data": response}
         except Exception as error:
             return {"success": False, "detail": error}
@@ -46,6 +52,21 @@ class FindUser(FindUserInterface):
         response = None
         try:
             response = self.user_repository.select_user(user_id=user_id, username=username)
+            pet = self.__get_pet(response)
+            response.append(pet)
             return {"success": True, "data": response}
         except Exception as error:
             return {"success": False, "detail": error}
+
+    def __get_pet(self, response):
+        """
+        Private method to find if queried user owns one or more pets
+        :param response: response from caller method
+        :return: List that can contain one or more pets
+        """
+        try:
+            positive_user_id = response[0].id
+            pet = self.pet_repository.select_pet(user_id=positive_user_id)
+        except:
+            pet = []
+        return pet

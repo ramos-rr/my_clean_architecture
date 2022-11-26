@@ -1,6 +1,6 @@
 from src.presenters.controllers.find_user_controller import FindUserController
 from src.data.find_user import FindUser
-from src.infra.repo.test import UserRepositorySpy
+from src.infra.repo.test import UserRepositorySpy, PetRepositorySpy
 from src.presenters.helpers import HttpRequest
 from faker import Faker
 
@@ -11,9 +11,10 @@ fake_user_id = fake.random_number(digits=5)
 
 # Instantiate User Repository Spy with user_id and username
 user_repo_spy = UserRepositorySpy(user_id=fake_user_id, usename=fake_username)
+pet_repo_spy = PetRepositorySpy()
 
 # Instantiate find user use case so serve as user finder
-find_user_use_case = FindUser(user_repository=user_repo_spy)
+find_user_use_case = FindUser(user_repository=user_repo_spy, pet_repository=pet_repo_spy)
 
 # Instantiate find user controller to perform tests
 find_user_controller = FindUserController(find_user_use_case=find_user_use_case)
