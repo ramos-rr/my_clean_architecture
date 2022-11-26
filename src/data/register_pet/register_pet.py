@@ -38,5 +38,5 @@ class RegisterPet(RegisterPetInterface):
         Private method to check if a User exists
         :param user_id: Pet owner ID
         """
-        response = FindUser(self.user_repository).by_user_id(user_id=user_id)
+        response = FindUser(self.user_repository, self.pet_repository).by_user_id(user_id=user_id)
         return response

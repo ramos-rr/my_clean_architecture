@@ -104,6 +104,16 @@ def find_user(token, exp):
 
     message = None
     response = flask_adapter(request=request, api_route=find_user_composite.find_user_composer())
+
+    pet_found = {}
+
+    try:
+        if len(response.body[1]) != 0:
+            for n, p in enumerate(response.body[1], start=1):
+                pet_found[f"pet_id_{n}"] = p.id
+    except:
+        pass
+
     print(f'Token used: {token}')
     print(f'Minutes to expire: {exp}')
     if response.status_code < 300:
@@ -112,6 +122,10 @@ def find_user(token, exp):
             "user_id": response.body[0].id,
             "attributes": {"username": response.body[0].username,
                            "register_date": response.body[0].register_date},
+            "relationship": {
+                "type": "pets",
+                "data": pet_found
+            }
         }]
 
     else:

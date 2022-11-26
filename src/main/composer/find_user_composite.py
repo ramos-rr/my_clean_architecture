@@ -1,6 +1,6 @@
 from typing import Type
 from src.data.find_user import FindUser
-from src.infra.repo import UserRepository
+from src.infra.repo import UserRepository, PetRepository
 from src.presenters.controllers import FindUserController
 from src.presenters.interface import RouteInterface
 
@@ -12,7 +12,8 @@ def find_user_composer() -> Type[RouteInterface]:
     """
 
     user_repo = UserRepository()
-    find_user_usecase = FindUser(user_repository=user_repo)
+    pet_repo = PetRepository()
+    find_user_usecase = FindUser(user_repository=user_repo, pet_repository=pet_repo)
     find_user_router = FindUserController(find_user_use_case=find_user_usecase)
 
     return find_user_router
