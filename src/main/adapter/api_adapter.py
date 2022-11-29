@@ -46,12 +46,17 @@ def __get_query(request) -> any:
         try:
             query_string = request.args
         except:
-            return {}
+            try:
+                query_string = request.query  # For requests coming from "/auth" route
+            except:
+                return dict()
+            else:
+                return query_string
         else:
             return query_string
     else:
         if len(query_string) == 0:
-            return {}
+            return dict()
         else:
             query = dict()
 

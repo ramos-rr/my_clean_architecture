@@ -11,23 +11,25 @@ class UserRepository(UserRepositoryInterface):
     """ Class to manage Users """
 
     @classmethod
-    def insert_user(cls, username: str, password: str) -> Users:
+    def insert_user(cls, username: str, password: str, superuser: bool = False) -> Users:
         """
         Method to insert new user
         params: username: New User's name,
         params: password: New user's password
         """
         # Validate Data: Username and Password
-        username, password = cls.__validate_insert_user(username=username, password=password)
+        username, password = cls.__validate_insert_user(username=username, password=password, superuser=superuser)
         with DbConnectionHandler() as db_conn:
             try:
-                new_user = UsersEntity(username=username, password=password, register_date=datetime.datetime.now())
+                new_user = UsersEntity(username=username, password=password, superuser=superuser,
+                                       register_date=datetime.datetime.now())
                 db_conn.session.add(new_user)
                 db_conn.session.commit()
                 return Users(
                     id=new_user.id,
                     username=new_user.username,
                     password=new_user.password,
+                    superuser=superuser,
                     register_date=new_user.register_date,
                     session=db_conn.session.bind
                 )
@@ -79,8 +81,8 @@ class UserRepository(UserRepositoryInterface):
             db_conn.session.close()
 
     @classmethod
-    def __validate_insert_user(cls, username, password):
-        ErrorManager.validate_insert_user(username=username, password=password)
+    def __validate_insert_user(cls, username, password, superuser):
+        ErrorManager.validate_insert_user(username=username, password=password, superuser=superuser)
         return username, password
 
     @classmethod

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Clean Architecture Home</title>
+<style>
+Body {
+    background-color: lightyellow
+}
+.container{
+    widht: 70%;
+    padding: 25px;
+    background-color: lightgreen
+}
+</style>
+</head>
+<body>
+<h1>Home to My Clean Architecture Project</h1>
+<h2>Project to manage Database with OWNERS and their PETS</h2>
+<div class="container">
+    <h2>Select option to navigate</h2>
+    {% if menu_list %}
+        {% for menu in menu_list %}
+            <li><a href="/{{ menu }}">{{ menu }}</a> </li><br />
+        {% endfor %}
+    {% endif %}
+</div>
+<p></p>
+</body>
+</html>

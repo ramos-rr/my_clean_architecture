@@ -1,5 +1,4 @@
-from typing import Type, Dict
-
+from typing import Type
 from src.infra.errors import InsufficientDataError
 from src.presenters.interface import RouteInterface
 from src.presenters.helpers import HttpRequest, HttpResponse
@@ -19,7 +18,7 @@ class FindUserController(RouteInterface):
         :param http_request: Protocol to perform HTTP Request
         :return: HTTP response protocol
         """
-        response: Dict = {}
+        response = dict()
 
         # check if query
         if http_request.query is not None:

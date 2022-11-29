@@ -1,10 +1,17 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, render_template, make_response
 from ..auth_jwt import token_generator, token_verify
 from src.main.composer import register_user_composite, register_pet_composite, find_user_composite, find_pet_composite
 from src.main.adapter import flask_adapter
+from ...presenters.helpers import HttpRequest
+
+api_routes_bp = Blueprint("api_routes", __name__, template_folder='templates')
 
 
-api_routes_bp = Blueprint("api_routes", __name__)
+@api_routes_bp.route('/')
+def home():
+
+    menu_list = ["login", "statistics"]
+    return render_template('home.html', menu_list=menu_list)
 
 
 @api_routes_bp.route("/secret", methods=["GET"])
@@ -23,9 +30,36 @@ def secret_route(token, exp):
     ), 200
 
 
-@api_routes_bp.route('/auth', methods=["POST"])
-def authorization_route():
+@api_routes_bp.route('/login')
+def login():
+    return render_template('login.html')
 
+
+@api_routes_bp.route('/auth', methods=["POST"])
+def auth():
+
+    make_response(render_template('login.html'))
+    login_entry = request.form.to_dict()
+
+    if "username" in login_entry and "password" in login_entry:
+        new_request = HttpRequest(query=login_entry)
+        response = flask_adapter(request=new_request, api_route=find_user_composite.find_user_composer())
+
+        if response.status_code == 200:
+            if (response.body[0].username == login_entry["username"]) \
+                    and (response.body[0].password == login_entry["password"]) and response.body[0].superuser:
+                return "<h1>OK! Is a superuser</h1>"
+            elif (response.body[0].username == login_entry["username"]) \
+                    and (response.body[0].password == login_entry["password"]) and not response.body[0].superuser:
+                return "<h1>Almost OK! Is not a superuser</h1>", 401
+            else:
+                return "<h1>User not allowed. Please verify Username or password</h1>", 401
+        else:
+            return {"error": "Request denied! User don't exist", "status": 403}, 403
+    else:
+        return {
+            "error": "Must inform a username and password"
+        }, 403
     token = token_generator.generate(uid=10)
     print(token)
     return jsonify(
@@ -105,7 +139,7 @@ def find_user(token, exp):
     message = None
     response = flask_adapter(request=request, api_route=find_user_composite.find_user_composer())
 
-    pet_found = {}
+    pet_found = dict()
 
     try:
         if len(response.body[1]) != 0:

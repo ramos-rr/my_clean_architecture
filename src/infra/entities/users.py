@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer, DateTime
+from sqlalchemy import Column, String, Integer, Boolean, DateTime
 from sqlalchemy.orm import relationship
 from src.infra.config import Base
 from sqlalchemy.sql.functions import now
@@ -15,6 +15,8 @@ class Users(Base):
     username = Column(String, nullable=False, unique=True)
     # Set PASSWORD as Column, string and not Null
     password = Column(String, nullable=False)
+    # Set superuser
+    superuser = Column(Boolean, nullable=True, default=False)
     # Set PET_ID as a relationship with pets class
     pet_id = relationship("Pets")
     # Register date

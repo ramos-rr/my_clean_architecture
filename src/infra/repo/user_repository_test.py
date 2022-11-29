@@ -10,7 +10,7 @@ CreateDataBase.create_db()
 
 
 # TESTS FOR INSERT USER
-def test_insert_user(userrepo, username, password, engine):
+def test_insert_user_not_superuser(userrepo, username, password, engine):
     # SQL Command
     new_user = userrepo.insert_user(username=username, password=password)
     query_user = engine.execute("SELECT * FROM users WHERE id='{}';".format(new_user.id)).fetchone()
@@ -20,6 +20,26 @@ def test_insert_user(userrepo, username, password, engine):
     assert new_user.id == query_user.id
     assert new_user.username == query_user.username
     assert new_user.password == query_user.password
+    assert not new_user.superuser
+
+
+def test_insert_user_is_superuser(userrepo, username, password, engine):
+    # SQL Command
+    superuser = True
+    new_user = userrepo.insert_user(username=username, password=password, superuser=superuser)
+    query_user = engine.execute("SELECT * FROM users WHERE id='{}';".format(new_user.id)).fetchone()
+    # DELETE TEST INSERTION
+    engine.execute(f"DELETE FROM users WHERE id='{query_user.id}'")
+    # Assertions
+    assert new_user.id == query_user.id
+    assert new_user.username == query_user.username
+    assert new_user.password == query_user.password
+    assert new_user.superuser == query_user.superuser == superuser
+
+
+def test_inset_user_name_superuser_type_error(userrepo, username, password):
+    with pytest.raises(TypeError):
+        _ = userrepo.insert_user(username=username, password=password, superuser='Yes')
 
 
 def test_insert_user_duplicate_username_error(userrepo, username, password, engine):

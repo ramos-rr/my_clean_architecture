@@ -10,9 +10,11 @@ class ErrorManager:
     Class ErrorManager to handle all types of errors related to Repositories and Entities
     """
     @classmethod
-    def validate_insert_user(cls, username, password):
+    def validate_insert_user(cls, username, password, superuser):
         cls.__username_error(username)
         cls.__password_error(password)
+        if not isinstance(superuser, bool):
+            raise TypeError('Super User must be boolean')
 
     @classmethod
     def validate_select_user(cls, username, user_id):

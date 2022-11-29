@@ -20,21 +20,23 @@ class UserRepositorySpy(UserRepositoryInterface):
         self.id = user_id
         self.usename = usename
         self.password = password
+        self.superuser = False
         self.register_date = now
         self.session = 'test.test.test'
 
-    def insert_user(self, username: str, password: str) -> Users:
+    def insert_user(self, username: str, password: str, superuser: bool = False) -> Users:
         """
         Method to test insertion of a new user
         params: username: New User's name,
         params: password: New user's password
         """
-        username, password = self.__validate_insert_user(username=username, password=password)
+        username, password = self.__validate_insert_user(username=username, password=password, superuser=superuser)
 
         return Users(
             id=fake.random_number(digits=5),
             username=username,
             password=password,
+            superuser=self.superuser,
             register_date=now,
             session='test.test.test'  # Instead of provide an engine, this feature offers "test.test.test" to kwon
             # it's a test and wouldn't work with a real DB.
@@ -57,6 +59,7 @@ class UserRepositorySpy(UserRepositoryInterface):
                         id=self.id,
                         username=self.usename,
                         password=self.password,
+                        superuser=self.superuser,
                         register_date=self.register_date,
                         session=self.session,
                     )]
@@ -72,6 +75,7 @@ class UserRepositorySpy(UserRepositoryInterface):
                         id=self.id,
                         username=self.usename,
                         password=self.password,
+                        superuser=self.superuser,
                         register_date=self.register_date,
                         session=self.session,
                     )]
@@ -87,6 +91,7 @@ class UserRepositorySpy(UserRepositoryInterface):
                         id=self.id,
                         username=self.usename,
                         password=self.password,
+                        superuser=self.superuser,
                         register_date=self.register_date,
                         session=self.session,
                     )]
@@ -96,8 +101,8 @@ class UserRepositorySpy(UserRepositoryInterface):
                 raise NoResultFoundError(message='No row was found when one was required', code=None)
 
     @classmethod
-    def __validate_insert_user(cls, username, password):
-        ErrorManager.validate_insert_user(username=username, password=password)
+    def __validate_insert_user(cls, username, password, superuser):
+        ErrorManager.validate_insert_user(username=username, password=password, superuser=superuser)
         return username, password
 
     @classmethod
