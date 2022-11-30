@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request, render_template, make_response
-from ..auth_jwt import token_generator, token_verify
+from ..auth_jwt import token_generator, token_verify, active_token
 from src.main.composer import register_user_composite, register_pet_composite, find_user_composite, find_pet_composite
 from src.main.adapter import flask_adapter
 from ...presenters.helpers import HttpRequest
@@ -8,10 +8,10 @@ api_routes_bp = Blueprint("api_routes", __name__, template_folder='templates')
 
 
 @api_routes_bp.route('/')
-def home():
+def index():
 
     menu_list = ["login", "statistics"]
-    return render_template('home.html', menu_list=menu_list)
+    return render_template('index.html', menu_list=menu_list)
 
 
 @api_routes_bp.route("/secret", methods=["GET"])
@@ -48,7 +48,16 @@ def auth():
         if response.status_code == 200:
             if (response.body[0].username == login_entry["username"]) \
                     and (response.body[0].password == login_entry["password"]) and response.body[0].superuser:
-                return "<h1>OK! Is a superuser</h1>"
+                uid = int(response.body[0].id)
+                token = token_generator.generate(uid=uid)
+                active_token.fix_token(new_token=token, new_uid=uid)
+
+                return jsonify(
+                    {
+                        "token": active_token.get_token()
+                    }
+                ), 200
+
             elif (response.body[0].username == login_entry["username"]) \
                     and (response.body[0].password == login_entry["password"]) and not response.body[0].superuser:
                 return "<h1>Almost OK! Is not a superuser</h1>", 401
@@ -60,13 +69,6 @@ def auth():
         return {
             "error": "Must inform a username and password"
         }, 403
-    token = token_generator.generate(uid=10)
-    print(token)
-    return jsonify(
-        {
-            "token": token
-        }
-    ), 200
 
 
 @api_routes_bp.route("/api/users", methods=["POST"])

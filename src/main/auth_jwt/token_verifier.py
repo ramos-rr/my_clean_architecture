@@ -1,8 +1,8 @@
 import time
 from functools import wraps
-from flask import request, jsonify
+from flask import jsonify  # , request
 import jwt
-from .token_handler import token_generator
+from .token_handler import token_generator, active_token
 
 
 def token_verify(function: callable) -> callable:
@@ -11,8 +11,9 @@ def token_verify(function: callable) -> callable:
     @wraps(function)
     def decorated(*args, **kwargs):
 
-        raw_token = request.headers.get("Authorization")
-        uid = request.headers.get("uid")
+        raw_token, uid = active_token.get_token()
+        # raw_token = request.headers.get("Authorization")
+        # uid = request.headers.get("uid")
 
         if not raw_token or not uid:
             return jsonify(
@@ -68,6 +69,8 @@ def token_verify(function: callable) -> callable:
                 ), 401
 
             next_token = token_generator.refresh(token)
+            if next_token != token:
+                active_token.fix_token(new_token=next_token, new_uid=uid)
 
             print(next_token)
 
