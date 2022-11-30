@@ -1,4 +1,5 @@
 import time
+from decouple import config
 from functools import wraps
 from flask import jsonify  # , request
 import jwt
@@ -11,7 +12,10 @@ def token_verify(function: callable) -> callable:
     @wraps(function)
     def decorated(*args, **kwargs):
 
-        raw_token, uid = active_token.get_token()
+        active = active_token.get_token()
+        raw_token = active["token"]
+        uid = active["uid"]
+        username = active["username"]
         # raw_token = request.headers.get("Authorization")
         # uid = request.headers.get("uid")
 
@@ -27,7 +31,7 @@ def token_verify(function: callable) -> callable:
             else:
                 token = raw_token
 
-            token_info = jwt.decode(token, key="1234", algorithms="HS256")
+            token_info = jwt.decode(token, key=config("TOKEN_KEY"), algorithms=config("TOKEN_ALGORITHMS"))
             token_exp = f'{(token_info["exp"] - time.time()) / 60:.2f}'
             key_uid = token_info["uid"]
 
@@ -70,10 +74,12 @@ def token_verify(function: callable) -> callable:
 
             next_token = token_generator.refresh(token)
             if next_token != token:
-                active_token.fix_token(new_token=next_token, new_uid=uid)
+                active_token.fix_token(new_token=next_token, new_uid=uid, username=username)
+                token_info = jwt.decode(token, key=config("TOKEN_KEY"), algorithms=config("TOKEN_ALGORITHMS"))
+                token_exp = f'{(token_info["exp"] - time.time()) / 60:.2f}'
 
             print(next_token)
 
-            return function(next_token, token_exp, *args, **kwargs)
+            return function(next_token, token_exp, username, *args, **kwargs)
 
     return decorated

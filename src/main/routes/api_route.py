@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request, render_template, make_response
+from flask import Blueprint, jsonify, request, render_template, make_response, redirect, url_for
 from ..auth_jwt import token_generator, token_verify, active_token
 from src.main.composer import register_user_composite, register_pet_composite, find_user_composite, find_pet_composite
 from src.main.adapter import flask_adapter
@@ -14,16 +14,25 @@ def index():
     return render_template('index.html', menu_list=menu_list)
 
 
+@api_routes_bp.route("/home", methods=["GET", "POST"])
+@token_verify
+def home(token, exp, username):
+    print(token)
+    print(exp)
+    return render_template('home.html', name=username.title()), 200
+
+
 @api_routes_bp.route("/secret", methods=["GET"])
 @token_verify
-def secret_route(token, exp):
+def secret_route(token, exp, username):
 
     return jsonify(
         {
             "data": {
                 "token_info": {
                     "token": token,
-                    "exp": exp
+                    "exp": exp,
+                    "username": username
                 }
             }
         }
@@ -32,7 +41,12 @@ def secret_route(token, exp):
 
 @api_routes_bp.route('/login')
 def login():
-    return render_template('login.html')
+    active = active_token.get_token()
+    token = active.get('token', None)
+    if token is None:
+        return render_template('login.html')
+    else:
+        return redirect(url_for('api_routes.home'), 302)
 
 
 @api_routes_bp.route('/auth', methods=["POST"])
@@ -50,13 +64,9 @@ def auth():
                     and (response.body[0].password == login_entry["password"]) and response.body[0].superuser:
                 uid = int(response.body[0].id)
                 token = token_generator.generate(uid=uid)
-                active_token.fix_token(new_token=token, new_uid=uid)
+                active_token.fix_token(new_token=token, new_uid=uid, username=login_entry["username"])
 
-                return jsonify(
-                    {
-                        "token": active_token.get_token()
-                    }
-                ), 200
+                return redirect(url_for('api_routes.home'), 302)
 
             elif (response.body[0].username == login_entry["username"]) \
                     and (response.body[0].password == login_entry["password"]) and not response.body[0].superuser:
