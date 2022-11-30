@@ -55,7 +55,7 @@ def auth():
             else:
                 return "<h1>User not allowed. Please verify Username or password</h1>", 401
         else:
-            return {"error": "Request denied! User don't exist", "status": 403}, 403
+            return {"error": "Request denied! User doesn't exist", "status": 403}, 403
     else:
         return {
             "error": "Must inform a username and password"
