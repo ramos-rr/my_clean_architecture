@@ -12,3 +12,8 @@ class ActiveToken:
         self.__token = new_token
         self.__uid = new_uid
         self.__username = username
+
+    def _logout(self):
+        self.__uid = None
+        self.__token = None
+        self.__username = None

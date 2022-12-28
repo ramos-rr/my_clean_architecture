@@ -35,7 +35,30 @@ def __get_body(request) -> any:
     try:
         body = request.json
     except:
-        pass
+        try:
+            body = request.body
+        except:
+            return body
+        else:
+            try:
+                if "user_id" in body:
+                    user_id = body.get("user_id")
+                    if user_id:
+                        try:
+                            body["user_id"] = int(body["user_id"])
+                        except:
+                            pass
+                if "age" in body:
+                    age = body.get("age")
+                    if age:
+                        try:
+                            body["age"] = int(body["age"])
+                        except:
+                            pass
+            except:
+                return body
+            else:
+                return body
     return body
 
 

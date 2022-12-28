@@ -2,33 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Add</title>
+    <title>Add User</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
 
 </head>
 <body>
-<div class="row">
-</div>
-<form action="/auth" class="container" method="post">
-    <h1 style="text-align: center">Login</h1>
+<h1 style="text-align: center; color:green;">Add new User</h1>
+<form action="/register_user" class="container" method="post">
     <div class="row">
-        <div class="col-md-8=2">
+        <div class="col-md-6">
             <input type="text" name="username" id="username" placeholder="username" class="form-control" required>
-            <input type="text" name="password" id="password" placeholder="password" class="form-control" required>
-
         </div>
-        <div>
-            <br>
-        </div>
-        <div class="col-md-12">
+        <div class="col-md-6">
+            <input type="password" name="password" id="password" placeholder="password" class="form-control" required>
         </div>
     </div>
     <br>
     <div class="row col-xs-12">
-        <button type="submit" class="btn btn-block btn-primary">Submit</button>
+        <button onclick="myFunction()" class="btn btn-block btn-success">Submit</button>
     </div>
+        <script>
+    function myFunction() {
+        confirm("Confirm User?");
+    }
+    </script>
 </form>
-<form action="/" class="container" method="get">
+<form action="/home" class="container" method="get">
     <div style="text-align: center" class="row col-xs-12">
         <button type="submit" class="btn btn-block btn-cancel">Cancel</button>
     </div>

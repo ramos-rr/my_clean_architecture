@@ -2,12 +2,63 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewpoint"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimal-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie-edge">
     <title>Home</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
 </head>
 <body>
-<div style="text-align: center;"><h1>Welcome {{ name }}</h1></div>
-    <hr>
-    <p>Please select option</p>
-<h1></h1>
+<h1 style="text-align: center;">Welcome {{ name }}</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <a href="/register_user">+ User</a>
+            <br>
+        </div>
+        <div class="col-xs-12">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Username (click for full profile)</th>
+                    <th>Pets</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if users %}
+                    {% for user in users %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td><a href="/view/user_{{ user.id }}">{{ user.username }}</a></td>
+                            <td>{{ user.pet }}</td>
+                            <td>
+                            <a href="/edit/user_{{ user.id }}">Edit</a>
+                             /
+                            <a href="/delete/user_{{ user.id }}" onclick="myFunction()">Delete</a>
+                                <script>
+                                   function myFunction() {
+                                    confirm("DELETE USER?");
+                                }
+                                </script>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    {% else %}
+                        <tr>(No data found)</tr>
+                {% endif %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="container">
+    <form action="/logout">
+        <button type="submit" class="btn btn-block btn-dark" style="height:30px; width:100px">Logout</button>
+    </form>
+</div>
 </body>
 </html>

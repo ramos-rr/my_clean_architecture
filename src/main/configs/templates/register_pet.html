@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add User</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+</head>
+<body style="background-color: lightblue">
+<h1 style="text-align: center; color:green;">Add new Pet</h1>
+<form action="/user_{{ user_id }}/register_pet" class="container" method="post">
+    <div class="row">
+        <div class="col-md-6">
+            <h2 style="color:red;">Register pet for {{ username }}</h2>
+            <label>Pet Name
+            <input type="text" name="petname" id="petname" placeholder="Enter the pet name" class="form-control" required>
+            </label>
+            <br>
+            <br>
+            <label>Select specie</label>
+            <br>
+            <input list="specie_list" id="specie" name="specie" placeholder="Selec specie">
+            <datalist id="specie_list">
+                <option value="dog">
+                <option value="cat">
+                <option value="bird">
+                <option value="fish">
+                <option value="reptile">
+            </datalist>
+            <br>
+            <br>
+            <label>Age</label>
+            <br>
+            <input type="text" name="age" id="age" placeholder="Enter the pet age in years" >
+        </div>
+    </div>
+    <br>
+    <div class="row col-xs-12">
+        <button onclick="myFunction()" class="btn btn-block btn-success">Submit</button>
+    </div>
+        <script>
+    function myFunction() {
+        confirm("Confirm Pet?");
+    }
+    </script>
+</form>
+<form action="/view/user_{{ user_id }}" class="container" method="get">
+    <div class="row col-xs-12">
+        <button type="submit" class="btn btn-block btn-cancel">Cancel</button>
+    </div>
+</form>
+</body>
+</html>

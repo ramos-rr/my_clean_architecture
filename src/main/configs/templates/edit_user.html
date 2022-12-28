@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit User</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+</head>
+<body>
+<h1 style="text-align: center; color: red">Edit "{{ username }}"</h1>
+<form action="/edit/user_{{ user_id }}" class="container" method="post">
+    <div class="row">
+        <div class="col-md-6">
+            <label>New username</label>
+            <br>
+            <input type="text" name="username" id="username" placeholder="enter new username">
+            <p>(let it blank to keep the current name)</p>
+            <br>
+            <br>
+            <label>New password</label>
+            <br>
+            <input type="password" name="password" id="password" placeholder="enter new password">
+            <p>(let it blank to keep the current password)</p>
+        </div>
+    </div>
+    <br>
+    <div class="row col-xs-12">
+        <button type="submit" class="btn btn-block btn-success">Submit changes</button>
+    </div>
+</form>
+<form action="/view/user_{{ user_id }}" class="container" method="get">
+    <div class="row col-xs-12">
+        <button type="submit" class="btn btn-block btn-cancel">Cancel</button>
+    </div>
+</form>
+<div class="container">
+    <hr>
+    <form action="/delete/user_{{ user_id }}">
+        <button onclick="myFunction()" class="btn btn-block btn-danger" style="height:35px; width:200px">Delete user</button>
+    </form>
+</div>
+<script>
+function myFunction() {
+    confirm("DELETE USER?");
+}
+</script>
+</body>
+</html>

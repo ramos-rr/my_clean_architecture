@@ -1,3 +1,4 @@
+from decouple import config
 from datetime import datetime, timedelta
 import time
 import jwt
@@ -49,3 +50,8 @@ class TokenGenerator:
             algorithm="HS256"
         )
         return token
+
+    def _logout(self):
+        self.__TOKEN_KEY = config("TOKEN_KEY")
+        self.__EXP_TIME_MIN = config("TOKEN_EXPIRATION_MIN", cast=int)
+        self.__REFRESH_TIME_MIN = config("TOKEN_REFRESH_MIN", cast=int)

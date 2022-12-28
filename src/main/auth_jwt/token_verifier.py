@@ -22,7 +22,7 @@ def token_verify(function: callable) -> callable:
         if not raw_token or not uid:
             return jsonify(
                 {
-                    "error": "Not allowed. Must inform a user_id"
+                    "error": "Not allowed. Must login first"
                 }), 401
 
         try:

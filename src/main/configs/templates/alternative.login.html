@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-secale=1">
+    <title>Login Page</title>
+<style>
+Body {
+    front-family: Calibri, Helvetica, sans-serif;
+    background-color: lightgray;
+}
+button {
+    background-color: #4CAF50;
+    width: 30%;
+    color: black;
+    padding: 15px;
+    margin: 10px 0px;
+    border: none;
+    cursor: pointer;
+    }
+form {
+    border: 3px solid #f1f1f1;
+}
+input[type=text], input[type=password] {
+    width: 50%;
+    margin: 8px 0;
+    padding: 12px 20px;
+    display: inline-block;
+    border: 2px solid green;
+    box-sizing: border-box;
+}
+button:hover {
+    opacity: 0.7;
+}
+.cancelbtn {
+    width: auto;
+    padding: 10px 18px;
+    margin: 10px 5px;
+}
+.container {
+    padding: 25px;
+    background-color: lightblue;
+    }
+</style>
+</head>
+<body>
+    <div style="text-align: center;"><h1>Login</h1>
+    <form action="/auth" method="post">
+        <div class="container">
+            <div style="text-align: center;"><label>Username</label>
+            <input type="text" placeholder="Enter username" name="username" required><br />
+        <label>Password</label>
+            <input type="password" placeholder="Enter password" name="password" required><br />
+            <button type="submit">Login</button></div>
+            <a href="/">Back to home</a>
+        </div>
+    </form>
+    </div>
+</body>
+</html>

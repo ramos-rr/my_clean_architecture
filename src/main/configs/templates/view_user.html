@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewpoint"
+         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimal-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie-edge">
+    <title>View</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+</head>
+<body style="background-color: rgba(255, 255, 128, .2);">
+<div class="container">
+    <h1 style="color:slateblue">{{ username }}</h1>
+    <h4>User Id: {{ user_id }}</h4>
+    <form action="/user_{{ user_id }}/register_pet" method="get">
+        <button type="submit" style="height:40px; width:100px" class="btn btn-block btn-success">+ Add pets</button>
+    </form>
+    <div class="col-xs-12">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Pet Id</th>
+                <th>Pet Name</th>
+                <th>Specie</th>
+                <th>Age</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% if pets %}
+                {% for pet in pets %}
+                <tr>
+                    <td>{{ pet.id }}</td>
+                    <td>{{ pet.petname }}</td>
+                    <td>{{ pet.specie }}</td>
+                    <td>{{ pet.age }}</td>
+                    <td>
+                        <a href="/edit/pet_{{ pet.id }}">Edit</a>
+                        /
+                        <a href="/edit/delete/pet_{{ pet.id }}">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td>(No pets found)</td>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+    </div>
+<hr>
+<div class="container">
+    <form action="/edit/user_{{ user_id }}">
+        <button type="submit" class="btn btn-block btn-info" style="height:30px; width:100px">Edit {{ username }}</button>
+    </form>
+    <br>
+    <form action="/delete/user_{{ user_id }}">
+        <button onclick="myFunction()" class="btn btn-block btn-danger" style="height:30px; width:100px">Delete user</button>
+    </form>
+</div>
+<script>
+function myFunction() {
+    confirm("DELETE USER?");
+}
+</script>
+<br>
+<p style="text-align: center"><a href="/home">Back to home</a></p>
+</body>
+</html>
