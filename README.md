@@ -52,7 +52,7 @@ little amount of code here, thus it might glue code that communicates with inner
 1. We've started setting up the `infra` to store our DB. For this project, we will just use sqlite throught sqlalchemy<br>
 - CREATE: `infra/config/db_config.py`
 - CREATE: `<db/config.py> class DbConnectionHandler` and follow the image 2.<br>
-- CREATE: `infra/config/db_config.py` to tell sqlalchemy what is going to be inside DB and their relationship between them<br>
+- CREATE: `infra/config/db_base.py` to tell sqlalchemy what is going to be inside DB and their relationship between them<br>
 - CREATE: `<db_config.py> Base = declarative_base()` '(_from sqlalchemy.ext.declarative import declarative_base_)'.
 This to awake DB.<br>
 - EDIT: `<config/__init__.py>` and point what to export > `from .db_base import Base` and `from .db_config_py import 
